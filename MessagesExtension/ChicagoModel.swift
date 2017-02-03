@@ -9,8 +9,12 @@
 import Foundation
 import Messages
 
-enum ValidMoves: String {
+enum ValidMove: String {
   case roll, setAside
+}
+
+enum PlayerItemNames: String {
+  case score, chips, rollLimit, playerID
 }
 
 enum Phase: Int {
@@ -23,7 +27,7 @@ class ChicagoModel {
   private var currentPhase: Phase
   private var dice: [D6] = [D6(), D6(), D6()]
   private var potOfChips: Int
-  private let validMoves: [ValidMoves] = [.roll, .roll, .roll, .setAside]
+  private let validMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]
   private var turnOver: Bool {
     return currentPlayer.availableMoves.count == 0
   }
@@ -37,8 +41,26 @@ class ChicagoModel {
   }
   
   init(withMessage message: MSMessage?, fromConversation convo: MSConversation) {
-    if let msg = message {
-      // set up game from parse Message
+    if let msg = message, let url = msg.url {
+      if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false) {
+        if let queryItems = components.queryItems {
+          var tempPlayer = Player()
+          for item in queryItems {
+            if item.name.contains(PlayerItemNames.playerID.rawValue) {
+              tempPlayer.setPlayer(id: item.value!)
+            }
+            if item.name == PlayerItemNames.score.rawValue {
+              tempPlayer.setScore(to: Int(item.value!)!)
+            }
+            if item.name == PlayerItemNames.chips.rawValue {
+              tempPlayer.setChips(to: Int(item.value!)!)
+            }
+            if item.name == PlayerItemNames.rollLimit.rawValue {
+              tempPlayer.setRollLimit(to: Int(item.value!)!)
+            }
+          }
+        }
+      }
     } else {
       players = [Player]()
       for (index, player) in convo.remoteParticipantIdentifiers.enumerated() {

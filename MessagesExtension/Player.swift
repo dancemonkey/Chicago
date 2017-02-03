@@ -8,22 +8,62 @@
 
 import Foundation
 
+enum MoveError: Error {
+  case invalidMove
+}
+
 class Player {
-  var score: Int
-  var chips: Int
-  var availableMoves: [ValidMoves]
+  private var _score: Int
+  var score: Int {
+    return _score
+  }
+  private var _rollLimit: Int = 3
+  var rollLimit: Int {
+    return _rollLimit
+  }
+  private var _chips: Int
+  private var _availableMoves: [ValidMove]
+  var availableMoves: [ValidMove] {
+    return _availableMoves
+  }
   private var _playerID: String!
   var playerID: String {
     return _playerID
   }
   
-  init(score: Int = 0, chips: Int = 0, availableMoves: [ValidMoves] = [.roll, .roll, .roll, .setAside]) {
-    self.score = score
-    self.chips = chips
-    self.availableMoves = availableMoves
+  init(score: Int = 0, chips: Int = 0, availableMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]) {
+    self._score = score
+    self._chips = chips
+    self._availableMoves = availableMoves
   }
   
   func setPlayer(id: String) {
     self._playerID = id
   }
+  
+  func setRollLimit(to rolls: Int) {
+    _rollLimit = rolls
+    _availableMoves.removeAll()
+    for _ in 0 ..< _rollLimit {
+      _availableMoves.append(.roll)
+    }
+    _availableMoves.append(.setAside)
+  }
+  
+  func makeMove(_ move: ValidMove) throws {
+    if _availableMoves.contains(move) {
+      _availableMoves.remove(at: _availableMoves.index(of: move)!)
+    } else {
+      throw MoveError.invalidMove
+    }
+  }
+  
+  func setScore(to score: Int) {
+    self._score = score
+  }
+  
+  func setChips(to chips: Int) {
+    self._chips = chips
+  }
+  
 }
