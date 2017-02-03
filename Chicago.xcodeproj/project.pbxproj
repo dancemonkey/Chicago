@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1014D3041E45328800C7CCCB /* DieButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3031E45328800C7CCCB /* DieButton.swift */; };
+		1014D3061E4532A300C7CCCB /* PlayerDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3051E4532A300C7CCCB /* PlayerDisplay.swift */; };
+		1014D3081E4532AE00C7CCCB /* PotDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3071E4532AE00C7CCCB /* PotDisplay.swift */; };
+		1014D30A1E4532BB00C7CCCB /* RollButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3091E4532BB00C7CCCB /* RollButton.swift */; };
+		1014D30C1E4532E000C7CCCB /* ScoreDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D30B1E4532E000C7CCCB /* ScoreDisplay.swift */; };
+		1014D30E1E4532EE00C7CCCB /* PhaseDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D30D1E4532EE00C7CCCB /* PhaseDisplay.swift */; };
 		10854D971E44CF83003934E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10854D961E44CF83003934E5 /* Assets.xcassets */; };
 		10854D9E1E44CF84003934E5 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 10854D9D1E44CF84003934E5 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		10854DA31E44CF84003934E5 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10854DA21E44CF84003934E5 /* Messages.framework */; };
@@ -43,6 +49,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1014D3031E45328800C7CCCB /* DieButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieButton.swift; sourceTree = "<group>"; };
+		1014D3051E4532A300C7CCCB /* PlayerDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerDisplay.swift; sourceTree = "<group>"; };
+		1014D3071E4532AE00C7CCCB /* PotDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotDisplay.swift; sourceTree = "<group>"; };
+		1014D3091E4532BB00C7CCCB /* RollButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RollButton.swift; sourceTree = "<group>"; };
+		1014D30B1E4532E000C7CCCB /* ScoreDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreDisplay.swift; sourceTree = "<group>"; };
+		1014D30D1E4532EE00C7CCCB /* PhaseDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhaseDisplay.swift; sourceTree = "<group>"; };
 		10854D931E44CF83003934E5 /* Chicago.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chicago.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10854D961E44CF83003934E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10854D981E44CF83003934E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -129,6 +141,12 @@
 		10854DBA1E44D102003934E5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1014D3031E45328800C7CCCB /* DieButton.swift */,
+				1014D3051E4532A300C7CCCB /* PlayerDisplay.swift */,
+				1014D3071E4532AE00C7CCCB /* PotDisplay.swift */,
+				1014D3091E4532BB00C7CCCB /* RollButton.swift */,
+				1014D30B1E4532E000C7CCCB /* ScoreDisplay.swift */,
+				1014D30D1E4532EE00C7CCCB /* PhaseDisplay.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -279,7 +297,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1014D30A1E4532BB00C7CCCB /* RollButton.swift in Sources */,
 				10854DBD1E44D169003934E5 /* ChicagoModel.swift in Sources */,
+				1014D3081E4532AE00C7CCCB /* PotDisplay.swift in Sources */,
+				1014D30C1E4532E000C7CCCB /* ScoreDisplay.swift in Sources */,
+				1014D30E1E4532EE00C7CCCB /* PhaseDisplay.swift in Sources */,
+				1014D3061E4532A300C7CCCB /* PlayerDisplay.swift in Sources */,
+				1014D3041E45328800C7CCCB /* DieButton.swift in Sources */,
 				10854DBF1E44D48D003934E5 /* Player.swift in Sources */,
 				10854DC11E44D5CE003934E5 /* Die.swift in Sources */,
 				10854DA61E44CF84003934E5 /* MessagesViewController.swift in Sources */,
@@ -474,6 +498,7 @@
 				10854DB11E44CF84003934E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		10854DB31E44CF84003934E5 /* Build configuration list for PBXNativeTarget "Chicago" */ = {
 			isa = XCConfigurationList;
@@ -482,6 +507,7 @@
 				10854DB51E44CF84003934E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

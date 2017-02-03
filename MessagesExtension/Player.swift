@@ -22,6 +22,9 @@ class Player {
     return _rollLimit
   }
   private var _chips: Int
+  var chips: Int {
+    return _chips
+  }
   private var _availableMoves: [ValidMove]
   var availableMoves: [ValidMove] {
     return _availableMoves
