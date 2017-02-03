@@ -13,6 +13,9 @@
 		10854DA61E44CF84003934E5 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10854DA51E44CF84003934E5 /* MessagesViewController.swift */; };
 		10854DA91E44CF84003934E5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10854DA71E44CF84003934E5 /* MainInterface.storyboard */; };
 		10854DAB1E44CF84003934E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10854DAA1E44CF84003934E5 /* Assets.xcassets */; };
+		10854DBD1E44D169003934E5 /* ChicagoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10854DBC1E44D169003934E5 /* ChicagoModel.swift */; };
+		10854DBF1E44D48D003934E5 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10854DBE1E44D48D003934E5 /* Player.swift */; };
+		10854DC11E44D5CE003934E5 /* Die.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10854DC01E44D5CE003934E5 /* Die.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		10854DA81E44CF84003934E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		10854DAA1E44CF84003934E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10854DAC1E44CF84003934E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10854DBC1E44D169003934E5 /* ChicagoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChicagoModel.swift; sourceTree = "<group>"; };
+		10854DBE1E44D48D003934E5 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		10854DC01E44D5CE003934E5 /* Die.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Die.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,12 +108,39 @@
 		10854DA41E44CF84003934E5 /* MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
-				10854DA51E44CF84003934E5 /* MessagesViewController.swift */,
+				10854DBB1E44D106003934E5 /* Model */,
+				10854DBA1E44D102003934E5 /* View */,
+				10854DB91E44D0FC003934E5 /* Controller */,
 				10854DA71E44CF84003934E5 /* MainInterface.storyboard */,
 				10854DAA1E44CF84003934E5 /* Assets.xcassets */,
 				10854DAC1E44CF84003934E5 /* Info.plist */,
 			);
 			path = MessagesExtension;
+			sourceTree = "<group>";
+		};
+		10854DB91E44D0FC003934E5 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				10854DA51E44CF84003934E5 /* MessagesViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		10854DBA1E44D102003934E5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		10854DBB1E44D106003934E5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				10854DBC1E44D169003934E5 /* ChicagoModel.swift */,
+				10854DBE1E44D48D003934E5 /* Player.swift */,
+				10854DC01E44D5CE003934E5 /* Die.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +152,7 @@
 			buildPhases = (
 				10854D911E44CF83003934E5 /* Resources */,
 				10854DB21E44CF84003934E5 /* Embed App Extensions */,
+				10854DB71E44D03C003934E5 /* Increment Build */,
 			);
 			buildRules = (
 			);
@@ -137,6 +171,7 @@
 				10854D991E44CF84003934E5 /* Sources */,
 				10854D9A1E44CF84003934E5 /* Frameworks */,
 				10854D9B1E44CF84003934E5 /* Resources */,
+				10854DB81E44D04E003934E5 /* Increment Build */,
 			);
 			buildRules = (
 			);
@@ -208,11 +243,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		10854DB71E44D03C003934E5 /* Increment Build */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		10854DB81E44D04E003934E5 /* Increment Build */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		10854D991E44CF84003934E5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10854DBD1E44D169003934E5 /* ChicagoModel.swift in Sources */,
+				10854DBF1E44D48D003934E5 /* Player.swift in Sources */,
+				10854DC11E44D5CE003934E5 /* Die.swift in Sources */,
 				10854DA61E44CF84003934E5 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
