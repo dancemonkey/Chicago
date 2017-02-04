@@ -9,13 +9,16 @@
 import UIKit
 
 class PlayerDisplay: UIView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
+  
+  @IBOutlet weak var playerNumber: UILabel!
+  @IBOutlet weak var chipCount: UILabel!
+  
+  func setChips(to count: Int) {
+    chipCount.text = "Chips - \(count)"
+  }
+  
+  func setPlayer(number: Int) {
+    playerNumber.text = "Player \(number)"
+  }
+  
 }

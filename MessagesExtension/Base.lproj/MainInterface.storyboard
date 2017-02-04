@@ -1,14 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Messages View Controller-->
         <scene sceneID="7MM-of-jgj">
             <objects>
-                <viewController id="ObA-dk-sSI" customClass="MessagesViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ObA-dk-sSI" customClass="MessagesViewController" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qkL-Od-lgU"/>
                         <viewControllerLayoutGuide type="bottom" id="n38-gi-rB5"/>
@@ -16,24 +20,149 @@
                     <view key="view" contentMode="scaleToFill" id="zMn-AG-sqS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello World" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d1e-fi-ked">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="centerY" secondItem="d1e-fi-ked" secondAttribute="centerY" id="H0s-hz-dDP"/>
-                            <constraint firstAttribute="centerX" secondItem="d1e-fi-ked" secondAttribute="centerX" id="wFy-hW-Bib"/>
-                        </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="528"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--GameVC-->
+        <scene sceneID="Kao-jz-wGd">
+            <objects>
+                <viewController storyboardIdentifier="GameVC" id="JQW-Mt-wIG" customClass="GameVC" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ftq-pe-a6O"/>
+                        <viewControllerLayoutGuide type="bottom" id="Hwk-PR-CoV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="c3h-aq-Gho">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7XI-vn-ieQ" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="164" y="28" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gw3-GR-cBO" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="16" y="28" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ln-ZI-KBO" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="313" y="28" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TJK-0v-Gb2" customClass="PlayerDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="16" y="66" width="151" height="118"/>
+                                <color key="backgroundColor" red="0.4431372549" green="0.75294117650000003" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="151" id="D6C-sA-Ylb"/>
+                                    <constraint firstAttribute="height" constant="118" id="Mit-pa-sEW"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="43e-6N-OrZ" customClass="PlayerDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="16" y="192" width="151" height="118"/>
+                                <color key="backgroundColor" red="0.4431372549" green="0.75294117650000003" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="118" id="iSf-6Q-uTq"/>
+                                    <constraint firstAttribute="width" constant="151" id="jKB-Ku-gdf"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31S-oa-FDe" customClass="PlayerDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="208" y="66" width="151" height="118"/>
+                                <color key="backgroundColor" red="0.4431372549" green="0.75294117650000003" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="151" id="dYv-4E-3VA"/>
+                                    <constraint firstAttribute="height" constant="118" id="oep-Qs-8H3"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y33-zf-Tku" customClass="PlayerDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="208" y="192" width="151" height="118"/>
+                                <color key="backgroundColor" red="0.4431372549" green="0.75294117650000003" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="151" id="WES-WD-j5M"/>
+                                    <constraint firstAttribute="height" constant="118" id="WRA-2o-VKw"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7t-ey-niZ" customClass="PotDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="134" y="318" width="106" height="83"/>
+                                <color key="backgroundColor" red="0.99607843139999996" green="0.63921568630000003" blue="0.015686274510000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="83" id="Hf6-Zd-ZbY"/>
+                                    <constraint firstAttribute="width" constant="106" id="crr-7M-X04"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mdN-Ms-HbF" customClass="PhaseDisplay" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="253" y="409" width="106" height="83"/>
+                                <color key="backgroundColor" red="0.027450980390000001" green="0.74509803919999995" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="106" id="B3o-Wu-yU6"/>
+                                    <constraint firstAttribute="height" constant="83" id="NRZ-5J-GCx"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEl-jF-YhI" customClass="RollButton" customModule="MessagesExtension" customModuleProvider="target">
+                                <rect key="frame" x="164" y="621" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="z7t-ey-niZ" firstAttribute="top" secondItem="Y33-zf-Tku" secondAttribute="bottom" constant="8" id="11Y-x1-bIF"/>
+                            <constraint firstAttribute="trailing" secondItem="Y33-zf-Tku" secondAttribute="trailing" constant="16" id="4tv-7q-ehb"/>
+                            <constraint firstItem="fEl-jF-YhI" firstAttribute="centerX" secondItem="c3h-aq-Gho" secondAttribute="centerX" id="53o-I9-ahw"/>
+                            <constraint firstItem="gw3-GR-cBO" firstAttribute="leading" secondItem="c3h-aq-Gho" secondAttribute="leading" constant="16" id="57x-YT-wyX"/>
+                            <constraint firstItem="7XI-vn-ieQ" firstAttribute="top" secondItem="Ftq-pe-a6O" secondAttribute="bottom" constant="8" id="8Z9-op-cff"/>
+                            <constraint firstAttribute="trailing" secondItem="9Ln-ZI-KBO" secondAttribute="trailing" constant="16" id="9zC-SR-U72"/>
+                            <constraint firstItem="TJK-0v-Gb2" firstAttribute="leading" secondItem="c3h-aq-Gho" secondAttribute="leading" constant="16" id="CeJ-zB-okw"/>
+                            <constraint firstItem="TJK-0v-Gb2" firstAttribute="top" secondItem="gw3-GR-cBO" secondAttribute="bottom" constant="8" id="MY5-UQ-dPq"/>
+                            <constraint firstItem="31S-oa-FDe" firstAttribute="top" secondItem="9Ln-ZI-KBO" secondAttribute="bottom" constant="8" id="SYd-3a-bIZ"/>
+                            <constraint firstAttribute="trailing" secondItem="31S-oa-FDe" secondAttribute="trailing" constant="16" id="TWJ-rY-obF"/>
+                            <constraint firstItem="Y33-zf-Tku" firstAttribute="top" secondItem="31S-oa-FDe" secondAttribute="bottom" constant="8" id="Tw2-Ya-73L"/>
+                            <constraint firstAttribute="trailing" secondItem="mdN-Ms-HbF" secondAttribute="trailing" constant="16" id="Xgg-nd-lKr"/>
+                            <constraint firstItem="mdN-Ms-HbF" firstAttribute="top" secondItem="z7t-ey-niZ" secondAttribute="bottom" constant="8" id="Y5b-pk-0tr"/>
+                            <constraint firstItem="gw3-GR-cBO" firstAttribute="centerY" secondItem="7XI-vn-ieQ" secondAttribute="centerY" id="b8V-l9-FSf"/>
+                            <constraint firstItem="9Ln-ZI-KBO" firstAttribute="centerY" secondItem="7XI-vn-ieQ" secondAttribute="centerY" id="fcy-Q5-CSm"/>
+                            <constraint firstItem="7XI-vn-ieQ" firstAttribute="centerX" secondItem="c3h-aq-Gho" secondAttribute="centerX" id="fxH-41-wON"/>
+                            <constraint firstItem="43e-6N-OrZ" firstAttribute="top" secondItem="TJK-0v-Gb2" secondAttribute="bottom" constant="8" id="hYq-a4-QO4"/>
+                            <constraint firstItem="Hwk-PR-CoV" firstAttribute="top" secondItem="fEl-jF-YhI" secondAttribute="bottom" constant="16" id="iD3-Uo-bdF"/>
+                            <constraint firstItem="z7t-ey-niZ" firstAttribute="centerX" secondItem="c3h-aq-Gho" secondAttribute="centerX" id="j1H-3b-aDz"/>
+                            <constraint firstItem="43e-6N-OrZ" firstAttribute="leading" secondItem="c3h-aq-Gho" secondAttribute="leading" constant="16" id="wLi-uD-p6a"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="phaseDisplay" destination="mdN-Ms-HbF" id="e2L-gs-m3W"/>
+                        <outlet property="potDisplay" destination="z7t-ey-niZ" id="zsj-nS-Y7l"/>
+                        <outlet property="rollbtn" destination="fEl-jF-YhI" id="8oy-ZX-uU1"/>
+                        <outletCollection property="dieBtn" destination="gw3-GR-cBO" collectionClass="NSMutableArray" id="wxC-bz-3UC"/>
+                        <outletCollection property="dieBtn" destination="7XI-vn-ieQ" collectionClass="NSMutableArray" id="o7r-F2-zF4"/>
+                        <outletCollection property="dieBtn" destination="9Ln-ZI-KBO" collectionClass="NSMutableArray" id="IUH-rt-jGY"/>
+                        <outletCollection property="playerDisplay" destination="TJK-0v-Gb2" collectionClass="NSMutableArray" id="h2E-FP-bnT"/>
+                        <outletCollection property="playerDisplay" destination="31S-oa-FDe" collectionClass="NSMutableArray" id="U0c-tY-TZ0"/>
+                        <outletCollection property="playerDisplay" destination="43e-6N-OrZ" collectionClass="NSMutableArray" id="onx-L7-4s8"/>
+                        <outletCollection property="playerDisplay" destination="Y33-zf-Tku" collectionClass="NSMutableArray" id="6TJ-gT-tGf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uFw-HG-Ygn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="837.60000000000002" y="200.14992503748127"/>
+        </scene>
+        <!--CompactVC-->
+        <scene sceneID="a4c-6B-uIP">
+            <objects>
+                <viewController storyboardIdentifier="CompactVC" id="HYB-6I-yeN" customClass="CompactVC" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="yaH-Pa-umk"/>
+                        <viewControllerLayoutGuide type="bottom" id="EdB-00-xPS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="by7-dE-rde">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lhj-Nr-YPI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1503" y="196"/>
         </scene>
     </scenes>
 </document>

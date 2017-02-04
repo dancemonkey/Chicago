@@ -26,7 +26,10 @@ enum Phase: Int {
 }
 
 class ChicagoModel {
-  private var players = [Player]()
+  private var _players = [Player]()
+  var players: [Player] {
+    return _players
+  }
   private var currentPlayer: Player? = nil
   private var currentPhase: Phase = .one
   private var dice: [D6] = [D6(), D6(), D6()]
@@ -62,7 +65,7 @@ class ChicagoModel {
             if item.name == PlayerItemNames.rollLimit.rawValue {
               tempPlayer.setRollLimit(to: Int(item.value!)!)
             }
-            players.append(tempPlayer)
+            _players.append(tempPlayer)
             if item.name == GameItemNames.phase.rawValue {
               currentPhase = Phase(rawValue: Int(item.value!)!)!
             }
@@ -76,7 +79,7 @@ class ChicagoModel {
       for (index, _) in convo.remoteParticipantIdentifiers.enumerated() {
         let player = Player()
         player.setPlayer(id: convo.remoteParticipantIdentifiers[index].uuidString)
-        players.append(player)
+        _players.append(player)
       }
       potOfChips = players.count * 2
       currentPhase = .one

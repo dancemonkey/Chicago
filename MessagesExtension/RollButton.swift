@@ -9,13 +9,9 @@
 import UIKit
 
 class RollButton: UIButton {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+  
+  func setRollCount(to count: Int, ofMax max: Int) {
+    self.setTitle("Roll \(count) of \(max)", for: .normal)
+  }
 
 }
