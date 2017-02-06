@@ -8,15 +8,39 @@
 
 import UIKit
 
+enum RollButtonState {
+  case roll, send
+}
+
 class RollButton: UIButton {
+  
+  var actionState: RollButtonState = .roll {
+    didSet {
+      switch actionState {
+      case .roll:
+        setTitle("ROLL", for: .normal)
+      case .send:
+        setTitle("SEND", for: .normal)
+      }
+    }
+  }
   
   func setRollCount(to count: Int, ofMax max: Int) {
     self.setTitle("Roll \(count) of \(max)", for: .normal)
   }
   
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    setTitle("ROLL", for: .normal)
+  }
+  
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesEnded(touches, with: event)
     
+  }
+  
+  func set(state: RollButtonState) {
+    self.actionState = state
   }
 
 }

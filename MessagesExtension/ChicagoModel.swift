@@ -85,14 +85,14 @@ class ChicagoModel {
         }
       }
     } else {
+      _currentPlayer = Player()
+      _currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
+      _players.append(currentPlayer!)
       for (index, _) in convo.remoteParticipantIdentifiers.enumerated() {
         let player = Player()
         player.setPlayer(id: convo.remoteParticipantIdentifiers[index].uuidString)
         _players.append(player)
       }
-      _currentPlayer = Player()
-      _currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
-      _players.append(currentPlayer!)
       _potOfChips = players.count * 2
       _currentPhase = .one
     }
@@ -116,6 +116,50 @@ class ChicagoModel {
   
   func isGameWon(byPlayer player: Player) -> Bool {
     return currentPhase == .two && player.chips == 0
+  }
+  
+  func distributeChips(forPhase phase: Phase) {
+    switch phase {
+    case .one:
+      addChipToLowestScore()
+    case .two:
+      subtractChipFromHighestScore()
+    }
+    
+  }
+  
+  private func addChipToLowestScore() {
+    var lowestScore = players.first?.score
+    var lowestPlayer = players.first
+    for player in players {
+      if player.score < lowestScore! {
+        lowestScore = player.score
+        lowestPlayer = player
+      }
+    }
+    lowestPlayer?.addChip()
+    self.removeChipFromPot()
+  }
+  
+  private func subtractChipFromHighestScore() {
+    var highestScore = players.first?.score
+    var highestPlayer = players.first
+    for player in players {
+      if player.score > highestScore! {
+        highestScore = player.score
+        highestPlayer = player
+      }
+    }
+    highestPlayer?.removeChip()
+    self.addChipToPot()
+  }
+  
+  private func addChipToPot() {
+    self._potOfChips = self._potOfChips + 1
+  }
+  
+  private func removeChipFromPot() {
+    self._potOfChips = self._potOfChips - 1
   }
 
 }

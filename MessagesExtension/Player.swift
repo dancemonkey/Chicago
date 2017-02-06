@@ -74,6 +74,14 @@ class Player {
     self._chips = chips
   }
   
+  func addChip() {
+    self._chips = self._chips + 1
+  }
+  
+  func removeChip() {
+    self._chips = self._chips - 1
+  }
+  
   func isTurnOver() -> Bool {
     return availableMoves.contains(.roll) == false
   }

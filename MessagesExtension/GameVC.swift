@@ -69,9 +69,13 @@ class GameVC: UIViewController {
         }
         scorePlayer()
         if currentPlayer!.isTurnOver() {
-          rollBtn.isEnabled = false
-          // TODO change title of button to SEND GAME
-          // TODO give player chips or take chips, depending on phase (new function)
+          rollBtn.set(state: .send)
+          // TESTING END OF ROUND
+          game!.distributeChips(forPhase: game!.currentPhase)
+          potDisplay.setChips(to: game!.potOfChips)
+//          if game!.isRoundOver {
+//            game!.distributeChips(forPhase: game!.currentPhase)
+//          }
         }
       } catch {
         print(error)
