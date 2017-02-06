@@ -81,17 +81,20 @@ class ChicagoModel {
         player.setPlayer(id: convo.remoteParticipantIdentifiers[index].uuidString)
         _players.append(player)
       }
+      currentPlayer = Player()
+      currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
+      _players.append(currentPlayer!)
       potOfChips = players.count * 2
       currentPhase = .one
     }
-    setCurrentPlayer(fromConversation: convo)
+//    setCurrentPlayer(fromConversation: convo)
   }
   
-  func setCurrentPlayer(fromConversation convo: MSConversation) {
-    currentPlayer = players.first(where: { (player) -> Bool in
-      return player.playerID == convo.localParticipantIdentifier.uuidString
-    })!
-  }
+//  func setCurrentPlayer(fromConversation convo: MSConversation) {
+//    currentPlayer = players.first(where: { (player) -> Bool in
+//      return player.playerID == convo.localParticipantIdentifier.uuidString
+//    })!
+//  }
   
   func isPhaseOver(phase: Phase) -> Bool {
     switch phase {

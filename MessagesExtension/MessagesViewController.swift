@@ -50,6 +50,7 @@ class MessagesViewController: MSMessagesAppViewController {
     guard let compactVC = storyboard?.instantiateViewController(withIdentifier: "CompactVC") as? CompactVC else {
       fatalError("Can't make a CompactVC")
     }
+    compactVC.delegate = self
     //    compactVC.newGameDelegate = self
     //    compactVC.soundPlayer = soundPlayer
     return compactVC
@@ -65,7 +66,6 @@ class MessagesViewController: MSMessagesAppViewController {
         if let queryItems = components.queryItems {
           if queryItems[0].name.contains(PlayerItemNames.playerID.rawValue) {
             vc.message = message
-            vc.conversation = conversation
           }
         }
       }
@@ -82,7 +82,7 @@ class MessagesViewController: MSMessagesAppViewController {
 //      vc.game = startingGame!
 //    }
 //    vc.soundPlayer = soundPlayer
-    
+    vc.conversation = conversation
     return vc
   }
   
@@ -90,10 +90,7 @@ class MessagesViewController: MSMessagesAppViewController {
   // MARK: - Conversation Handling
   
   override func willBecomeActive(with conversation: MSConversation) {
-    // Called when the extension is about to move from the inactive to active state.
-    // This will happen when the extension is about to present UI.
-    
-    // Use this method to configure the extension and restore previously stored state.
+    presentVC(for: conversation, with: presentationStyle)
   }
   
   override func didResignActive(with conversation: MSConversation) {
@@ -124,9 +121,10 @@ class MessagesViewController: MSMessagesAppViewController {
   }
   
   override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-    // Called before the extension transitions to a new presentation style.
-    
-    // Use this method to prepare for the change in presentation style.
+    guard let conversation = activeConversation else {
+      fatalError("No active conversation or something")
+    }
+    presentVC(for: conversation, with: presentationStyle)
   }
   
   override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
@@ -135,4 +133,13 @@ class MessagesViewController: MSMessagesAppViewController {
     // Use this method to finalize any behaviors associated with the change in presentation style.
   }
   
+}
+
+extension MessagesViewController: ExpandViewDelegate {
+  func expand(toPresentationStyle presentationStyle: MSMessagesAppPresentationStyle) {
+    requestPresentationStyle(presentationStyle)
+  }
+  func getPresentationStyle() -> MSMessagesAppPresentationStyle {
+    return self.presentationStyle
+  }
 }

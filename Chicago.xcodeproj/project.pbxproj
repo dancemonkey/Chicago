@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1009B2B91E47F0CB00A9AF6F /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1009B2B81E47F0CB00A9AF6F /* Protocols.swift */; };
+		1009B2BB1E47F6E800A9AF6F /* PlayerDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1009B2BA1E47F6E800A9AF6F /* PlayerDisplay.xib */; };
 		1014D3041E45328800C7CCCB /* DieButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3031E45328800C7CCCB /* DieButton.swift */; };
 		1014D3061E4532A300C7CCCB /* PlayerDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3051E4532A300C7CCCB /* PlayerDisplay.swift */; };
 		1014D3081E4532AE00C7CCCB /* PotDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014D3071E4532AE00C7CCCB /* PotDisplay.swift */; };
@@ -50,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1009B2B81E47F0CB00A9AF6F /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		1009B2BA1E47F6E800A9AF6F /* PlayerDisplay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerDisplay.xib; sourceTree = "<group>"; };
 		1014D3031E45328800C7CCCB /* DieButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DieButton.swift; sourceTree = "<group>"; };
 		1014D3051E4532A300C7CCCB /* PlayerDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerDisplay.swift; sourceTree = "<group>"; };
 		1014D3071E4532AE00C7CCCB /* PotDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotDisplay.swift; sourceTree = "<group>"; };
@@ -83,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1009B2B71E47F0BE00A9AF6F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1009B2B81E47F0CB00A9AF6F /* Protocols.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		10854D8C1E44CF83003934E5 = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +134,7 @@
 		10854DA41E44CF84003934E5 /* MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				1009B2B71E47F0BE00A9AF6F /* Utils */,
 				10854DBB1E44D106003934E5 /* Model */,
 				10854DBA1E44D102003934E5 /* View */,
 				10854DB91E44D0FC003934E5 /* Controller */,
@@ -150,6 +163,7 @@
 				1014D3071E4532AE00C7CCCB /* PotDisplay.swift */,
 				1014D3091E4532BB00C7CCCB /* RollButton.swift */,
 				1014D30D1E4532EE00C7CCCB /* PhaseDisplay.swift */,
+				1009B2BA1E47F6E800A9AF6F /* PlayerDisplay.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -259,6 +273,7 @@
 			files = (
 				10854DAB1E44CF84003934E5 /* Assets.xcassets in Resources */,
 				10854DA91E44CF84003934E5 /* MainInterface.storyboard in Resources */,
+				1009B2BB1E47F6E800A9AF6F /* PlayerDisplay.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +318,7 @@
 				108C50341E466501001C680A /* GameVC.swift in Sources */,
 				1014D30A1E4532BB00C7CCCB /* RollButton.swift in Sources */,
 				10854DBD1E44D169003934E5 /* ChicagoModel.swift in Sources */,
+				1009B2B91E47F0CB00A9AF6F /* Protocols.swift in Sources */,
 				1014D3081E4532AE00C7CCCB /* PotDisplay.swift in Sources */,
 				1014D30E1E4532EE00C7CCCB /* PhaseDisplay.swift in Sources */,
 				1014D3061E4532A300C7CCCB /* PlayerDisplay.swift in Sources */,

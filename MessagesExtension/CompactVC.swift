@@ -10,9 +10,13 @@ import UIKit
 
 class CompactVC: UIViewController {
   
+  var delegate: ExpandViewDelegate? = nil
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    // Do any additional setup after loading the view.
+  }
+  
+  @IBAction func loadGame() {
+    delegate?.expand(toPresentationStyle: .expanded)
   }
 }
