@@ -13,6 +13,9 @@ class PlayerDisplay: UIView {
   @IBOutlet weak var view: UIView!
   @IBOutlet weak var playerNumber: UILabel!
   @IBOutlet weak var chipCount: UILabel!
+  @IBOutlet weak var score: UILabel!
+  
+  var playerID: String = ""
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -26,7 +29,7 @@ class PlayerDisplay: UIView {
     super.init(frame: frame)
   }
   
-  private func setChips(to count: Int) {
+  func setChips(to count: Int) {
     chipCount.text = "Chips - \(count)"
   }
   
@@ -34,9 +37,18 @@ class PlayerDisplay: UIView {
     playerNumber.text = "Player \(number + 1)"
   }
   
-  func setupDisplay(forPlayer player: Player, order: Int) {
+  func setScore(to score: Int) {
+    self.score.text = "Score - \(score)"
+  }
+  
+  func setupDisplay(forPlayer player: Player, order: Int, score: Int) {
     setChips(to: player.chips)
     setPlayer(number: order)
+    setScore(to: score)
+  }
+  
+  func setID(to playerID: String) {
+    self.playerID = playerID
   }
   
 }

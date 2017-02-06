@@ -13,5 +13,10 @@ class RollButton: UIButton {
   func setRollCount(to count: Int, ofMax max: Int) {
     self.setTitle("Roll \(count) of \(max)", for: .normal)
   }
+  
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    super.touchesEnded(touches, with: event)
+    
+  }
 
 }

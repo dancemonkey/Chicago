@@ -14,16 +14,19 @@ class GameVC: UIViewController {
   @IBOutlet var dieBtn: [DieButton]!
   @IBOutlet var playerDisplay: [PlayerDisplay]!
   @IBOutlet weak var potDisplay: PotDisplay!
-  @IBOutlet weak var rollbtn: RollButton!
+  @IBOutlet weak var rollBtn: RollButton!
   @IBOutlet weak var phaseDisplay: PhaseDisplay!
   
   var game: ChicagoModel?
+  var currentPlayer: Player?
+  var currentPlayerDisplay: PlayerDisplay?
   weak var message: MSMessage?
   weak var conversation: MSConversation!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     game = ChicagoModel(withMessage: message, fromConversation: conversation)
+    currentPlayer = game!.currentPlayer
     initViewsForGame()
   }
   
@@ -33,16 +36,51 @@ class GameVC: UIViewController {
       return
     }
     sortPlayerDisplays()
-    for (index, player) in game.players.enumerated() {
-      playerDisplay[index].isHidden = false
-      playerDisplay[index].setupDisplay(forPlayer: player, order: index)
-    }
+    potDisplay.setChips(to: game.potOfChips)
+    phaseDisplay.setPhase(to: game.currentPhase)
   }
   
   private func sortPlayerDisplays() {
-//    for player in playerDisplay {
-//      // sort playerDisplays before trying to activate them based on number of players
-//    }
+    for (index, player) in game!.players.enumerated() {
+      playerDisplay[index].isHidden = false
+      playerDisplay[index].setupDisplay(forPlayer: player, order: index, score: player.score)
+      playerDisplay[index].setID(to: player.playerID)
+    }
+    currentPlayerDisplay = playerDisplay.first(where: { (display) -> Bool in
+      display.playerID == currentPlayer?.playerID
+    })
+  }
+  
+  func scorePlayer() {
+    var total = 0
+    for die in dieBtn {
+      total = total + die.die.score
+    }
+    currentPlayer?.setScore(to: total)
+    currentPlayerDisplay?.setScore(to: total)
+  }
+  
+  @IBAction func rollDice(sender: UIButton) {
+    if currentPlayer?.isTurnOver() == false {
+      do {
+        try currentPlayer?.makeMove(.roll)
+        for die in dieBtn where die.locked == false {
+          die.setFace(toValue: die.die.roll(withModifier: 0))
+        }
+        scorePlayer()
+        if currentPlayer!.isTurnOver() {
+          rollBtn.isEnabled = false
+          // TODO change title of button to SEND GAME
+          // TODO give player chips or take chips, depending on phase (new function)
+        }
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
+  @IBAction func lockDie(sender: UIButton) {
+    
   }
   
 }

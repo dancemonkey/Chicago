@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="chipCount" destination="ciH-eQ-hcZ" id="C25-uQ-wWz"/>
                 <outlet property="playerNumber" destination="iNc-Ov-cSF" id="8gO-fq-1fn"/>
+                <outlet property="score" destination="mQk-Ea-B2i" id="ncT-Wv-2Zr"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -32,13 +33,21 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mQk-Ea-B2i">
+                    <rect key="frame" x="8" y="89" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="mQk-Ea-B2i" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="Bsw-hF-TSV"/>
                 <constraint firstItem="iNc-Ov-cSF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="P12-9K-II5"/>
                 <constraint firstItem="iNc-Ov-cSF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="QBI-iw-LEN"/>
                 <constraint firstItem="ciH-eQ-hcZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="WlA-y8-vtH"/>
                 <constraint firstItem="ciH-eQ-hcZ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="dPP-Vx-SBD"/>
+                <constraint firstAttribute="bottom" secondItem="mQk-Ea-B2i" secondAttribute="bottom" constant="8" id="wcm-Sg-5KW"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>

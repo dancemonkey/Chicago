@@ -43,14 +43,23 @@
                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7XI-vn-ieQ" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="164" y="28" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="lockDieWithSender:" destination="JQW-Mt-wIG" eventType="touchUpInside" id="QJo-PW-OdE"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gw3-GR-cBO" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="16" y="28" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="lockDieWithSender:" destination="JQW-Mt-wIG" eventType="touchUpInside" id="fzj-TS-qj6"/>
+                                </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ln-ZI-KBO" customClass="DieButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="313" y="28" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="lockDieWithSender:" destination="JQW-Mt-wIG" eventType="touchUpInside" id="GM5-1p-r4S"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7t-ey-niZ" customClass="PotDisplay" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="134" y="318" width="106" height="83"/>
@@ -71,6 +80,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEl-jF-YhI" customClass="RollButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="164" y="621" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="rollDiceWithSender:" destination="JQW-Mt-wIG" eventType="touchUpInside" id="kXB-qJ-SeL"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTh-v9-Xmm" customClass="PlayerDisplay" customModule="MessagesExtension" customModuleProvider="target">
                                 <rect key="frame" x="16" y="66" width="147" height="107"/>
@@ -132,7 +144,7 @@
                     <connections>
                         <outlet property="phaseDisplay" destination="mdN-Ms-HbF" id="e2L-gs-m3W"/>
                         <outlet property="potDisplay" destination="z7t-ey-niZ" id="zsj-nS-Y7l"/>
-                        <outlet property="rollbtn" destination="fEl-jF-YhI" id="8oy-ZX-uU1"/>
+                        <outlet property="rollBtn" destination="fEl-jF-YhI" id="Kn4-81-RB8"/>
                         <outletCollection property="dieBtn" destination="gw3-GR-cBO" collectionClass="NSMutableArray" id="wxC-bz-3UC"/>
                         <outletCollection property="dieBtn" destination="7XI-vn-ieQ" collectionClass="NSMutableArray" id="o7r-F2-zF4"/>
                         <outletCollection property="dieBtn" destination="9Ln-ZI-KBO" collectionClass="NSMutableArray" id="IUH-rt-jGY"/>

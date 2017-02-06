@@ -33,7 +33,7 @@ class Player {
   var playerID: String {
     return _playerID
   }
-  
+    
   init(score: Int = 0, chips: Int = 0, availableMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]) {
     self._score = score
     self._chips = chips
@@ -54,10 +54,15 @@ class Player {
   }
   
   func makeMove(_ move: ValidMove) throws {
-    if _availableMoves.contains(move) {
-      _availableMoves.remove(at: _availableMoves.index(of: move)!)
-    } else {
-      throw MoveError.invalidMove
+    switch move {
+    case .roll:
+      if _availableMoves.contains(.roll) {
+        _availableMoves.remove(at: _availableMoves.index(of: .roll)!)
+      } else {
+        throw MoveError.invalidMove
+      }
+    case .setAside:
+      break
     }
   }
   
@@ -67,6 +72,10 @@ class Player {
   
   func setChips(to chips: Int) {
     self._chips = chips
+  }
+  
+  func isTurnOver() -> Bool {
+    return availableMoves.contains(.roll) == false
   }
   
 }

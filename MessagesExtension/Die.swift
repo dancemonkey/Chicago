@@ -48,3 +48,18 @@ class D6: Die {
     self._value = 3
   }
 }
+
+extension D6 {
+  var score: Int {
+    switch value {
+    case 1:
+      return 100
+    case 2, 3, 4, 5:
+      return value
+    case 6:
+      return 60
+    default:
+      return 0
+    }
+  }
+}

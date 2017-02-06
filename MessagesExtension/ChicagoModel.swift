@@ -30,10 +30,19 @@ class ChicagoModel {
   var players: [Player] {
     return _players
   }
-  private var currentPlayer: Player? = nil
-  private var currentPhase: Phase = .one
+  private var _currentPlayer: Player? = nil
+  var currentPlayer: Player? {
+    return _currentPlayer
+  }
+  private var _currentPhase: Phase = .one
+  var currentPhase: Phase {
+    return _currentPhase
+  }
   private var dice: [D6] = [D6(), D6(), D6()]
-  private var potOfChips: Int = 0
+  private var _potOfChips: Int = 0
+  var potOfChips: Int {
+    return _potOfChips
+  }
   private let validMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]
   private var turnOver: Bool {
     return currentPlayer?.availableMoves.count == 0
@@ -67,10 +76,10 @@ class ChicagoModel {
             }
             _players.append(tempPlayer)
             if item.name == GameItemNames.phase.rawValue {
-              currentPhase = Phase(rawValue: Int(item.value!)!)!
+              _currentPhase = Phase(rawValue: Int(item.value!)!)!
             }
             if item.name == GameItemNames.potSize.rawValue {
-              potOfChips = Int(item.value!)!
+              _potOfChips = Int(item.value!)!
             }
           }
         }
@@ -81,11 +90,11 @@ class ChicagoModel {
         player.setPlayer(id: convo.remoteParticipantIdentifiers[index].uuidString)
         _players.append(player)
       }
-      currentPlayer = Player()
-      currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
+      _currentPlayer = Player()
+      _currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
       _players.append(currentPlayer!)
-      potOfChips = players.count * 2
-      currentPhase = .one
+      _potOfChips = players.count * 2
+      _currentPhase = .one
     }
 //    setCurrentPlayer(fromConversation: convo)
   }
@@ -108,4 +117,5 @@ class ChicagoModel {
   func isGameWon(byPlayer player: Player) -> Bool {
     return currentPhase == .two && player.chips == 0
   }
+
 }
