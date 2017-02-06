@@ -61,17 +61,11 @@ class MessagesViewController: MSMessagesAppViewController {
       fatalError("VC not found.")
     }
     
-    if let message = conversation.selectedMessage, let url = message.url {
-      if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false) {
-        if let queryItems = components.queryItems {
-          if queryItems[0].name.contains(PlayerItemNames.playerID.rawValue) {
-            vc.message = message
-          }
-        }
-      }
+    if let message = conversation.selectedMessage {
+      vc.message = message
     }
     
-//    vc.composeDelegate = self
+    vc.composeDelegate = self
     
 //    if let game = startingGame {
 //      vc.game = game
@@ -133,6 +127,13 @@ class MessagesViewController: MSMessagesAppViewController {
     // Use this method to finalize any behaviors associated with the change in presentation style.
   }
   
+  override func didSelect(_ message: MSMessage, conversation: MSConversation) {
+    guard let conversation = activeConversation else {
+      fatalError("No active conversation or something")
+    }
+    presentVC(for: conversation, with: presentationStyle)
+  }
+  
 }
 
 extension MessagesViewController: ExpandViewDelegate {
@@ -141,5 +142,46 @@ extension MessagesViewController: ExpandViewDelegate {
   }
   func getPresentationStyle() -> MSMessagesAppPresentationStyle {
     return self.presentationStyle
+  }
+}
+
+extension MessagesViewController: ComposeMessageDelegate {
+  func compose(fromGame game: ChicagoModel) {
+    let convo = activeConversation ?? MSConversation()
+    let session = convo.selectedMessage?.session ?? MSSession()
+    
+    let layout = MSMessageTemplateLayout()
+    layout.caption = "$\(convo.localParticipantIdentifier)"
+    
+    let message = MSMessage(session: session)
+    message.layout = layout
+    
+    var components = URLComponents()
+    let potSize = URLQueryItem(name: GameItemNames.potSize.rawValue, value: "\(game.potOfChips)")
+    let phase = URLQueryItem(name: GameItemNames.phase.rawValue, value: "\(game.currentPhase.rawValue)")
+    let numberOfPlayers = URLQueryItem(name: GameItemNames.numberOfPlayers.rawValue, value: "\(game.players.count)")
+    components.queryItems = [potSize, phase, numberOfPlayers]
+    for (index, player) in game.players.enumerated() {
+      let playerID = URLQueryItem(name: PlayerItemNames.playerID.rawValue + "\(index)", value: player.playerID)
+      components.queryItems?.append(playerID)
+      let playerScore = URLQueryItem(name: PlayerItemNames.score.rawValue + "\(index)", value: "\(player.score)")
+      components.queryItems?.append(playerScore)
+      let playerChips = URLQueryItem(name: PlayerItemNames.chips.rawValue + "\(index)", value: "\(player.chips)")
+      components.queryItems?.append(playerChips)
+      let playerRollLimit = URLQueryItem(name: PlayerItemNames.rollLimit.rawValue + "\(index)", value: "\(player.rollLimit)")
+      components.queryItems?.append(playerRollLimit)
+    }
+    
+    message.summaryText = "$\(convo.localParticipantIdentifier)"
+    
+    message.url = components.url
+    
+    convo.insert(message) { (error) in
+      guard error == nil else {
+        fatalError()
+      }
+    }
+    
+    dismiss()
   }
 }

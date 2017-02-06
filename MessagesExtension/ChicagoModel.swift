@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize
+  case phase, potSize, numberOfPlayers
 }
 
 enum Phase: Int {
@@ -58,23 +58,41 @@ class ChicagoModel {
   
   init(withMessage message: MSMessage?, fromConversation convo: MSConversation) {
     if let msg = message, let url = msg.url {
+      print("found message and url")
       if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false) {
+        print("found components")
         if let queryItems = components.queryItems {
-          let tempPlayer = Player()
-          for item in queryItems {
-            if item.name.contains(PlayerItemNames.playerID.rawValue) {
-              tempPlayer.setPlayer(id: item.value!)
-            }
-            if item.name == PlayerItemNames.score.rawValue {
-              tempPlayer.setScore(to: Int(item.value!)!)
-            }
-            if item.name == PlayerItemNames.chips.rawValue {
-              tempPlayer.setChips(to: Int(item.value!)!)
-            }
-            if item.name == PlayerItemNames.rollLimit.rawValue {
-              tempPlayer.setRollLimit(to: Int(item.value!)!)
+          print("found queryItems")
+          
+          let numberOfPlayers = Int((queryItems.first(where: { (item) -> Bool in
+            return item.name == GameItemNames.numberOfPlayers.rawValue
+          })?.value)!)
+          
+          for index in 0 ..< (numberOfPlayers!) {
+            let tempPlayer = Player()
+            for item in queryItems {
+              if item.name == PlayerItemNames.playerID.rawValue + "\(index)" {
+                tempPlayer.setPlayer(id: item.value!)
+                print(convo.localParticipantIdentifier.uuidString)
+                print(item.value!)
+                if convo.localParticipantIdentifier.uuidString == item.value! {
+                  _currentPlayer = tempPlayer
+                }
+              }
+              if item.name == PlayerItemNames.score.rawValue + "\(index)" {
+                tempPlayer.setScore(to: Int(item.value!)!)
+              }
+              if item.name == PlayerItemNames.chips.rawValue + "\(index)" {
+                tempPlayer.setChips(to: Int(item.value!)!)
+              }
+              if item.name == PlayerItemNames.rollLimit.rawValue + "\(index)" {
+                tempPlayer.setRollLimit(to: Int(item.value!)!)
+              }
             }
             _players.append(tempPlayer)
+          }
+          
+          for item in queryItems {
             if item.name == GameItemNames.phase.rawValue {
               _currentPhase = Phase(rawValue: Int(item.value!)!)!
             }
@@ -85,6 +103,7 @@ class ChicagoModel {
         }
       }
     } else {
+      // USING THESE IDs WILL NOT WORK, THEY AREN'T CONSISTENT BETWEEN LOCAL/REMOTE ACROSS DEVICES
       _currentPlayer = Player()
       _currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
       _players.append(currentPlayer!)
@@ -96,14 +115,7 @@ class ChicagoModel {
       _potOfChips = players.count * 2
       _currentPhase = .one
     }
-//    setCurrentPlayer(fromConversation: convo)
   }
-  
-//  func setCurrentPlayer(fromConversation convo: MSConversation) {
-//    currentPlayer = players.first(where: { (player) -> Bool in
-//      return player.playerID == convo.localParticipantIdentifier.uuidString
-//    })!
-//  }
   
   func isPhaseOver(phase: Phase) -> Bool {
     switch phase {

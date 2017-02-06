@@ -22,12 +22,14 @@ class GameVC: UIViewController {
   var currentPlayerDisplay: PlayerDisplay?
   weak var message: MSMessage?
   weak var conversation: MSConversation!
+  var composeDelegate: ComposeMessageDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     game = ChicagoModel(withMessage: message, fromConversation: conversation)
     currentPlayer = game!.currentPlayer
     initViewsForGame()
+    print(currentPlayer?.playerID)
   }
   
   func initViewsForGame() {
@@ -35,17 +37,21 @@ class GameVC: UIViewController {
       print("where the fuck is the game?")
       return
     }
-    sortPlayerDisplays()
+    setupPlayerDisplays()
+    setCurrentPlayer()
     potDisplay.setChips(to: game.potOfChips)
     phaseDisplay.setPhase(to: game.currentPhase)
   }
   
-  private func sortPlayerDisplays() {
+  private func setupPlayerDisplays() {
     for (index, player) in game!.players.enumerated() {
       playerDisplay[index].isHidden = false
       playerDisplay[index].setupDisplay(forPlayer: player, order: index, score: player.score)
       playerDisplay[index].setID(to: player.playerID)
     }
+  }
+  
+  func setCurrentPlayer() {
     currentPlayerDisplay = playerDisplay.first(where: { (display) -> Bool in
       display.playerID == currentPlayer?.playerID
     })
@@ -60,6 +66,17 @@ class GameVC: UIViewController {
     currentPlayerDisplay?.setScore(to: total)
   }
   
+  func distributeChips() {
+    game!.distributeChips(forPhase: game!.currentPhase)
+    potDisplay.setChips(to: game!.potOfChips)
+    setupPlayerDisplays()
+  }
+  
+  func resetForNextRound() {
+    // reset player scores
+    // choose starting player
+  }
+  
   @IBAction func rollDice(sender: UIButton) {
     if currentPlayer?.isTurnOver() == false {
       do {
@@ -70,16 +87,16 @@ class GameVC: UIViewController {
         scorePlayer()
         if currentPlayer!.isTurnOver() {
           rollBtn.set(state: .send)
-          // TESTING END OF ROUND
-          game!.distributeChips(forPhase: game!.currentPhase)
-          potDisplay.setChips(to: game!.potOfChips)
-//          if game!.isRoundOver {
-//            game!.distributeChips(forPhase: game!.currentPhase)
-//          }
+          if game!.isRoundOver {
+            distributeChips()
+            resetForNextRound()
+          }
         }
       } catch {
         print(error)
       }
+    } else {
+      composeDelegate?.compose(fromGame: self.game!)
     }
   }
   

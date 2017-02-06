@@ -13,3 +13,7 @@ protocol ExpandViewDelegate {
   func expand(toPresentationStyle presentationStyle: MSMessagesAppPresentationStyle)
   func getPresentationStyle() -> MSMessagesAppPresentationStyle
 }
+
+protocol ComposeMessageDelegate {
+  func compose(fromGame game: ChicagoModel)
+}
