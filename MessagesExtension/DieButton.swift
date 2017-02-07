@@ -10,8 +10,7 @@ import UIKit
 
 class DieButton: UIButton {
   
-  // TODO Hookup so roll results display on title
-  // TODO pressing button locks results
+  // TODO pressing button locks results, but not until first roll
   
   var die: D6 = D6()
   
@@ -31,11 +30,6 @@ class DieButton: UIButton {
   
   func setFace(toValue value: Int) {
     self.setTitle("\(value)", for: .normal)
-  }
-
-  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    super.touchesEnded(touches, with: event)
-    self.locked = true
   }
   
 }

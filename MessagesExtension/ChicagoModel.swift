@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen
 }
 
 enum Phase: Int {
@@ -34,6 +34,10 @@ class ChicagoModel {
   var currentPlayer: Player? {
     return _currentPlayer
   }
+  private var _nextPlayer: Player? = nil
+  var nextPlayer: Player? {
+    return _nextPlayer
+  }
   private var _currentPhase: Phase = .one
   var currentPhase: Phase {
     return _currentPhase
@@ -46,6 +50,10 @@ class ChicagoModel {
   private let validMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]
   private var turnOver: Bool {
     return currentPlayer?.availableMoves.count == 0
+  }
+  private var _lastUserToOpen: String? = nil
+  var lastUserToOpen: String? {
+    return _lastUserToOpen
   }
   var isRoundOver: Bool {
     get {
@@ -64,34 +72,6 @@ class ChicagoModel {
         if let queryItems = components.queryItems {
           print("found queryItems")
           
-          let numberOfPlayers = Int((queryItems.first(where: { (item) -> Bool in
-            return item.name == GameItemNames.numberOfPlayers.rawValue
-          })?.value)!)
-          
-          for index in 0 ..< (numberOfPlayers!) {
-            let tempPlayer = Player()
-            for item in queryItems {
-              if item.name == PlayerItemNames.playerID.rawValue + "\(index)" {
-                tempPlayer.setPlayer(id: item.value!)
-                print(convo.localParticipantIdentifier.uuidString)
-                print(item.value!)
-                if convo.localParticipantIdentifier.uuidString == item.value! {
-                  _currentPlayer = tempPlayer
-                }
-              }
-              if item.name == PlayerItemNames.score.rawValue + "\(index)" {
-                tempPlayer.setScore(to: Int(item.value!)!)
-              }
-              if item.name == PlayerItemNames.chips.rawValue + "\(index)" {
-                tempPlayer.setChips(to: Int(item.value!)!)
-              }
-              if item.name == PlayerItemNames.rollLimit.rawValue + "\(index)" {
-                tempPlayer.setRollLimit(to: Int(item.value!)!)
-              }
-            }
-            _players.append(tempPlayer)
-          }
-          
           for item in queryItems {
             if item.name == GameItemNames.phase.rawValue {
               _currentPhase = Phase(rawValue: Int(item.value!)!)!
@@ -99,21 +79,49 @@ class ChicagoModel {
             if item.name == GameItemNames.potSize.rawValue {
               _potOfChips = Int(item.value!)!
             }
+            if item.name == GameItemNames.currentPlayer.rawValue {
+              _currentPlayer = parsePlayer(fromItem: item.value!)
+            }
+            if item.name == GameItemNames.nextPlayer.rawValue {
+              _nextPlayer = parsePlayer(fromItem: item.value!)
+            }
+            if item.name == GameItemNames.lastUserToOpen.rawValue {
+              _lastUserToOpen = item.value!
+              print("last user to open as parsed from game model \(lastUserToOpen)")
+            }
           }
+          
+          _players.append(currentPlayer!)
+          _players.append(nextPlayer!)
+
         }
       }
     } else {
-      // USING THESE IDs WILL NOT WORK, THEY AREN'T CONSISTENT BETWEEN LOCAL/REMOTE ACROSS DEVICES
       _currentPlayer = Player()
       _currentPlayer?.setPlayer(id: convo.localParticipantIdentifier.uuidString)
       _players.append(currentPlayer!)
-      for (index, _) in convo.remoteParticipantIdentifiers.enumerated() {
-        let player = Player()
-        player.setPlayer(id: convo.remoteParticipantIdentifiers[index].uuidString)
-        _players.append(player)
-      }
+      _nextPlayer = Player()
+      _nextPlayer?.setPlayer(id: "NIL")
+      _players.append(_nextPlayer!)
       _potOfChips = players.count * 2
       _currentPhase = .one
+    }
+  }
+  
+  private func parsePlayer(fromItem item: String) -> Player {
+    let player = Player()
+    let delineator = "*-*-*"
+    let playerDetails = item.components(separatedBy: delineator)
+    player.setPlayer(id: playerDetails[0])
+    player.setScore(to: Int(playerDetails[1])!)
+    player.setChips(to: Int(playerDetails[2])!)
+    player.setRollLimit(to: Int(playerDetails[3])!)
+    return player
+  }
+  
+  func assignIdIfNeeded(forPlayer player: Player, fromConversation convo: MSConversation) {
+    if player.playerID == "NIL" {
+      player.setPlayer(id: convo.localParticipantIdentifier.uuidString)
     }
   }
   
@@ -128,6 +136,18 @@ class ChicagoModel {
   
   func isGameWon(byPlayer player: Player) -> Bool {
     return currentPhase == .two && player.chips == 0
+  }
+  
+  func getPlayerWhoWonRound() -> Player {
+    var baseScore = players[0].score
+    var winningPlayer = players[0]
+    for player in players {
+      if player.score >= baseScore {
+        baseScore = player.score
+        winningPlayer = player
+      }
+    }
+    return winningPlayer
   }
   
   func distributeChips(forPhase phase: Phase) {
@@ -172,6 +192,22 @@ class ChicagoModel {
   
   private func removeChipFromPot() {
     self._potOfChips = self._potOfChips - 1
+  }
+  
+  func isCheating(player: String) -> Bool {
+    if let last = lastUserToOpen {
+      print("last to open \(last)")
+      print("current user from VC \(player)")
+      return last == player
+    } else {
+      return false
+    }
+  }
+  
+  func resetPlayerScores() {
+    for player in players {
+      player.setScore(to: 0)
+    }
   }
 
 }

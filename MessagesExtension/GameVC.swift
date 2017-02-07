@@ -9,6 +9,10 @@
 import UIKit
 import Messages
 
+enum GameEndMessage: String {
+  case currentPlayerWon, currentPlayerLost
+}
+
 class GameVC: UIViewController {
   
   @IBOutlet var dieBtn: [DieButton]!
@@ -20,16 +24,21 @@ class GameVC: UIViewController {
   var game: ChicagoModel?
   var currentPlayer: Player?
   var currentPlayerDisplay: PlayerDisplay?
+  var currentUser: String?
   weak var message: MSMessage?
   weak var conversation: MSConversation!
   var composeDelegate: ComposeMessageDelegate?
+  var endGameMessage: GameEndMessage?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     game = ChicagoModel(withMessage: message, fromConversation: conversation)
     currentPlayer = game!.currentPlayer
     initViewsForGame()
-    print(currentPlayer?.playerID)
+    if game!.isCheating(player: currentUser!) {
+      // INITIALIZE THE GAME BUT DISABLE ALL INTERACTION
+      print("cheater")
+    }
   }
   
   func initViewsForGame() {
@@ -73,8 +82,23 @@ class GameVC: UIViewController {
   }
   
   func resetForNextRound() {
-    // reset player scores
-    // choose starting player
+    defer {
+//      game!.resetPlayerScores()
+    }
+    let winningPlayer = game!.getPlayerWhoWonRound()
+    if winningPlayer === currentPlayer! {
+      endGameMessage = .currentPlayerWon
+      // show results popup, with button to start new turn
+      startNewTurn()
+    } else {
+      endGameMessage = .currentPlayerLost
+      // show results pop-up with button to send message
+      // composeDelegate?.compose(fromGame: self.game!)
+    }
+  }
+  
+  func startNewTurn() {
+    print("starting new turn, not sending")
   }
   
   @IBAction func rollDice(sender: UIButton) {
@@ -87,21 +111,24 @@ class GameVC: UIViewController {
         scorePlayer()
         if currentPlayer!.isTurnOver() {
           rollBtn.set(state: .send)
-          if game!.isRoundOver {
-            distributeChips()
-            resetForNextRound()
-          }
         }
       } catch {
         print(error)
       }
     } else {
-      composeDelegate?.compose(fromGame: self.game!)
+      if game!.isRoundOver {
+        distributeChips()
+        resetForNextRound()
+      } else {
+        composeDelegate?.compose(fromGame: self.game!)
+      }
     }
   }
   
-  @IBAction func lockDie(sender: UIButton) {
-    
+  @IBAction func lockDie(sender: DieButton) {
+    if currentPlayer!.didRoll {
+      sender.locked = true
+    }
   }
   
 }

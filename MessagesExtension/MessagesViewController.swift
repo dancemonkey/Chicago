@@ -66,17 +66,9 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     vc.composeDelegate = self
-    
-//    if let game = startingGame {
-//      vc.game = game
-//    } else {
-//      let wordList = WordsAPI()
-//      self.startingGame = Game(withMessage: nil)
-//      startingGame?.setCurrentWord(to: wordList.fetchRandomWord()!)
-//      vc.game = startingGame!
-//    }
 //    vc.soundPlayer = soundPlayer
     vc.conversation = conversation
+    vc.currentUser = conversation.localParticipantIdentifier.uuidString
     return vc
   }
   
@@ -160,17 +152,10 @@ extension MessagesViewController: ComposeMessageDelegate {
     let potSize = URLQueryItem(name: GameItemNames.potSize.rawValue, value: "\(game.potOfChips)")
     let phase = URLQueryItem(name: GameItemNames.phase.rawValue, value: "\(game.currentPhase.rawValue)")
     let numberOfPlayers = URLQueryItem(name: GameItemNames.numberOfPlayers.rawValue, value: "\(game.players.count)")
-    components.queryItems = [potSize, phase, numberOfPlayers]
-    for (index, player) in game.players.enumerated() {
-      let playerID = URLQueryItem(name: PlayerItemNames.playerID.rawValue + "\(index)", value: player.playerID)
-      components.queryItems?.append(playerID)
-      let playerScore = URLQueryItem(name: PlayerItemNames.score.rawValue + "\(index)", value: "\(player.score)")
-      components.queryItems?.append(playerScore)
-      let playerChips = URLQueryItem(name: PlayerItemNames.chips.rawValue + "\(index)", value: "\(player.chips)")
-      components.queryItems?.append(playerChips)
-      let playerRollLimit = URLQueryItem(name: PlayerItemNames.rollLimit.rawValue + "\(index)", value: "\(player.rollLimit)")
-      components.queryItems?.append(playerRollLimit)
-    }
+    let nextPlayer = URLQueryItem(name: GameItemNames.nextPlayer.rawValue, value: buildItem(forPlayer: game.currentPlayer!))
+    let currentPlayer = URLQueryItem(name: GameItemNames.currentPlayer.rawValue, value: buildItem(forPlayer: game.nextPlayer!))
+    let lastUserToOpen = URLQueryItem(name: GameItemNames.lastUserToOpen.rawValue, value: convo.localParticipantIdentifier.uuidString)
+    components.queryItems = [potSize, phase, numberOfPlayers, nextPlayer, currentPlayer, lastUserToOpen]
     
     message.summaryText = "$\(convo.localParticipantIdentifier)"
     
@@ -183,5 +168,21 @@ extension MessagesViewController: ComposeMessageDelegate {
     }
     
     dismiss()
+  }
+  
+  private func buildItem(forPlayer player: Player) -> String {
+    var item = ""
+    let delineator = "*-*-*"
+    item = item + player.playerID + delineator
+    item = item + "\(player.score)" + delineator
+    item = item + "\(player.chips)" + delineator
+    item = item + "\(player.rollLimit)" + delineator
+    return item
+  }
+  
+  private func assignIdIfNeeded(forPlayer player: Player, fromConversation convo: MSConversation) {
+    if player.playerID == "NIL" {
+      player.setPlayer(id: convo.localParticipantIdentifier.uuidString)
+    }
   }
 }

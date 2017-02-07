@@ -13,6 +13,7 @@ enum MoveError: Error {
 }
 
 class Player {
+  
   private var _score: Int
   var score: Int {
     return _score
@@ -33,6 +34,8 @@ class Player {
   var playerID: String {
     return _playerID
   }
+  
+  var didRoll: Bool = false
     
   init(score: Int = 0, chips: Int = 0, availableMoves: [ValidMove] = [.roll, .roll, .roll, .setAside]) {
     self._score = score
@@ -56,6 +59,7 @@ class Player {
   func makeMove(_ move: ValidMove) throws {
     switch move {
     case .roll:
+      didRoll = true
       if _availableMoves.contains(.roll) {
         _availableMoves.remove(at: _availableMoves.index(of: .roll)!)
       } else {

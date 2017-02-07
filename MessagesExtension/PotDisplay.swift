@@ -9,9 +9,7 @@
 import UIKit
 
 class PotDisplay: UIView {
-  
-  // TODO create XIB
-  
+    
   @IBOutlet weak var view: UIView!
   @IBOutlet weak var chipsInPot: UILabel!
   var totalChips: Int = 0 {

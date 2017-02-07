@@ -10,8 +10,6 @@ import UIKit
 
 class PhaseDisplay: UIView {
   
-  // TODO create XIB
-  
   @IBOutlet weak var view: UIView!
   @IBOutlet weak var phaseNumber: UILabel!
   
