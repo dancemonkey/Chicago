@@ -36,7 +36,7 @@ class GameVC: UIViewController {
     currentPlayer = game!.currentPlayer
     initViewsForGame()
     if game!.isCheating(player: currentUser!) {
-      // INITIALIZE THE GAME BUT DISABLE ALL INTERACTION
+      // TODO: INITIALIZE THE GAME BUT DISABLE ALL INTERACTION
       print("cheater")
     }
   }
@@ -83,22 +83,50 @@ class GameVC: UIViewController {
   
   func resetForNextRound() {
     defer {
-//      game!.resetPlayerScores()
+      game!.resetPlayerScores()
     }
     let winningPlayer = game!.getPlayerWhoWonRound()
     if winningPlayer === currentPlayer! {
       endGameMessage = .currentPlayerWon
+      showResults(forGameEnd: endGameMessage!)
       // show results popup, with button to start new turn
+      // disable main button
       startNewTurn()
     } else {
       endGameMessage = .currentPlayerLost
+      showResults(forGameEnd: endGameMessage!)
       // show results pop-up with button to send message
+      // disable main button
       // composeDelegate?.compose(fromGame: self.game!)
     }
   }
   
   func startNewTurn() {
     print("starting new turn, not sending")
+  }
+  
+  func showResults(forGameEnd ending: GameEndMessage) {
+    var endMessage: String = ""
+    var actionTitle: String = ""
+    var actionClosure: (UIAlertAction) -> ()
+    switch ending {
+    case .currentPlayerLost:
+      endMessage = "you lost the round, you have to take a planet"
+      actionTitle = "START NEW ROUND"
+      actionClosure = { action in
+        print("current player lost")
+      }
+    case .currentPlayerWon:
+      endMessage = "you won the round, your opponent will get a planet"
+      actionTitle = "SEND TO OPPONENT"
+      actionClosure = { action in
+        print("current player won")
+      }
+    }
+    let resultPopup = UIAlertController(title: "Turn Over", message: endMessage, preferredStyle: .actionSheet)
+    let action = UIAlertAction(title: actionTitle, style: .default, handler: actionClosure)
+    resultPopup.addAction(action)
+    present(resultPopup, animated: true, completion: nil)
   }
   
   @IBAction func rollDice(sender: UIButton) {

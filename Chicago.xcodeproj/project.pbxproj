@@ -28,6 +28,7 @@
 		10854DC11E44D5CE003934E5 /* Die.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10854DC01E44D5CE003934E5 /* Die.swift */; };
 		108C50341E466501001C680A /* GameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C50331E466501001C680A /* GameVC.swift */; };
 		108C50361E4666E9001C680A /* CompactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108C50351E4666E9001C680A /* CompactVC.swift */; };
+		10FEBFDB1E4A7739004C0E15 /* ResultsPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 10FEBFDA1E4A7739004C0E15 /* ResultsPopup.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		10854DC01E44D5CE003934E5 /* Die.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Die.swift; sourceTree = "<group>"; };
 		108C50331E466501001C680A /* GameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameVC.swift; sourceTree = "<group>"; };
 		108C50351E4666E9001C680A /* CompactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactVC.swift; sourceTree = "<group>"; };
+		10FEBFDA1E4A7739004C0E15 /* ResultsPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResultsPopup.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				105A8FB31E48AFA9008F1973 /* PotDisplay.xib */,
 				105A8FB51E48B18A008F1973 /* PhaseDisplay.xib */,
 				10357FD41E48D96600EE29D5 /* ViewUpdater.swift */,
+				10FEBFDA1E4A7739004C0E15 /* ResultsPopup.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				105A8FB41E48AFA9008F1973 /* PotDisplay.xib in Resources */,
+				10FEBFDB1E4A7739004C0E15 /* ResultsPopup.xib in Resources */,
 				10854DAB1E44CF84003934E5 /* Assets.xcassets in Resources */,
 				10854DA91E44CF84003934E5 /* MainInterface.storyboard in Resources */,
 				1009B2BB1E47F6E800A9AF6F /* PlayerDisplay.xib in Resources */,
