@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults
 }
 
 enum Phase: Int {
@@ -26,6 +26,7 @@ enum Phase: Int {
 }
 
 class ChicagoModel {
+  
   private var _players = [Player]()
   var players: [Player] {
     return _players
@@ -196,15 +197,20 @@ class ChicagoModel {
   
   func isCheating(player: String) -> Bool {
     if let last = lastUserToOpen {
-      print("last to open \(last)")
-      print("current user from VC \(player)")
       return last == player
     } else {
       return false
     }
   }
   
-  func resetPlayerScores() {
+  func startNewRound() {
+    resetPlayerScores()
+    for player in players {
+      player.setRollLimit(to: 3)
+    }
+  }
+  
+  private func resetPlayerScores() {
     for player in players {
       player.setScore(to: 0)
     }

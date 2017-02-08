@@ -29,15 +29,19 @@ class GameVC: UIViewController {
   weak var conversation: MSConversation!
   var composeDelegate: ComposeMessageDelegate?
   var endGameMessage: GameEndMessage?
+//  var showResultsAtStartup: Bool = false
   
   override func viewDidLoad() {
     super.viewDidLoad()
     game = ChicagoModel(withMessage: message, fromConversation: conversation)
-    currentPlayer = game!.currentPlayer
-    initViewsForGame()
     if game!.isCheating(player: currentUser!) {
       // TODO: INITIALIZE THE GAME BUT DISABLE ALL INTERACTION
       print("cheater")
+    }
+    currentPlayer = game!.currentPlayer
+    initViewsForGame()
+    if game!.isRoundOver {
+      showResultsPopup(forGameEnd: .currentPlayerLost)
     }
   }
   
@@ -81,46 +85,37 @@ class GameVC: UIViewController {
     setupPlayerDisplays()
   }
   
-  func resetForNextRound() {
-    defer {
-      game!.resetPlayerScores()
-    }
+  func showRoundResults() {
     let winningPlayer = game!.getPlayerWhoWonRound()
     if winningPlayer === currentPlayer! {
       endGameMessage = .currentPlayerWon
-      showResults(forGameEnd: endGameMessage!)
-      // show results popup, with button to start new turn
-      // disable main button
-      startNewTurn()
+      disableAllButtons()
+      showResultsPopup(forGameEnd: endGameMessage!)
     } else {
       endGameMessage = .currentPlayerLost
-      showResults(forGameEnd: endGameMessage!)
-      // show results pop-up with button to send message
-      // disable main button
-      // composeDelegate?.compose(fromGame: self.game!)
+      disableAllButtons()
+      showResultsPopup(forGameEnd: endGameMessage!)
     }
   }
   
-  func startNewTurn() {
-    print("starting new turn, not sending")
-  }
-  
-  func showResults(forGameEnd ending: GameEndMessage) {
+  func showResultsPopup(forGameEnd ending: GameEndMessage) {
     var endMessage: String = ""
     var actionTitle: String = ""
     var actionClosure: (UIAlertAction) -> ()
     switch ending {
     case .currentPlayerLost:
-      endMessage = "you lost the round, you have to take a planet"
+      endMessage = "you lost the round, you have to take a planet, you start the new round"
       actionTitle = "START NEW ROUND"
       actionClosure = { action in
-        print("current player lost")
+        // need to somehow inform other player of results of round before they start their turn
+        self.startNewTurn()
       }
     case .currentPlayerWon:
-      endMessage = "you won the round, your opponent will get a planet"
+      endMessage = "you won the round, your opponent will get a planet and start the next round"
       actionTitle = "SEND TO OPPONENT"
       actionClosure = { action in
-        print("current player won")
+        self.composeDelegate?.compose(fromGame: self.game!)
+        // need to create flag in VC to call startNewTurn when this package arrives
       }
     }
     let resultPopup = UIAlertController(title: "Turn Over", message: endMessage, preferredStyle: .actionSheet)
@@ -129,8 +124,31 @@ class GameVC: UIViewController {
     present(resultPopup, animated: true, completion: nil)
   }
   
-  @IBAction func rollDice(sender: UIButton) {
-    if currentPlayer?.isTurnOver() == false {
+  func startNewTurn() {
+    game!.startNewRound()
+    setupPlayerDisplays()
+    rollBtn.set(state: .roll)
+    for die in dieBtn {
+      die.locked = false
+    }
+    enableAllButtons()
+  }
+  
+  func disableAllButtons() {
+    for view in view.subviews where view is UIButton {
+      view.isUserInteractionEnabled = false
+    }
+  }
+  
+  func enableAllButtons() {
+    for view in view.subviews where view is UIButton {
+      view.isUserInteractionEnabled = true
+    }
+  }
+  
+  @IBAction func rollDice(sender: RollButton) {
+    switch sender.actionState {
+    case .roll:
       do {
         try currentPlayer?.makeMove(.roll)
         for die in dieBtn where die.locked == false {
@@ -143,13 +161,15 @@ class GameVC: UIViewController {
       } catch {
         print(error)
       }
-    } else {
+    case .send:
       if game!.isRoundOver {
         distributeChips()
-        resetForNextRound()
+        showRoundResults()
       } else {
         composeDelegate?.compose(fromGame: self.game!)
       }
+    case .newRound:
+      print("new round stuff")
     }
   }
   

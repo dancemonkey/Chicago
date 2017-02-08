@@ -21,10 +21,10 @@ class Die {
     return _value
   }
   
-  private var _locked = false
-  var locked: Bool {
-    return _locked
-  }
+//  private var _locked = false
+//  var locked: Bool {
+//    return _locked
+//  }
   
   init(sides: Int, faceColor: UIColor = .white, pipColor: UIColor = .black) {
     self._numSides = sides
@@ -36,9 +36,13 @@ class Die {
     return self._value
   }
   
-  func lockDie() {
-    self._locked = true
-  }
+//  func lockDie() {
+//    self._locked = true
+//  }
+//  
+//  func unlockDie() {
+//    self._locked = false
+//  }
   
 }
 
