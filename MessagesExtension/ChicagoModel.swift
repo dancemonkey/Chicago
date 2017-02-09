@@ -22,7 +22,7 @@ enum GameItemNames: String {
 }
 
 enum Phase: Int {
-  case one = 1, two
+  case one = 1, two, end
 }
 
 class ChicagoModel {
@@ -132,6 +132,19 @@ class ChicagoModel {
       return potOfChips == 0
     case .two:
       return currentPlayer?.chips == 0
+    case .end:
+      return true
+    }
+  }
+  
+  func startNewPhase(phase: Phase) {
+    switch phase {
+    case .one:
+      self._currentPhase = .two
+    case .two:
+      self._currentPhase = .end
+    case .end:
+      self._currentPhase = .one
     }
   }
   
@@ -157,6 +170,8 @@ class ChicagoModel {
       addChipToLowestScore()
     case .two:
       subtractChipFromHighestScore()
+    case .end:
+      break
     }
     
   }

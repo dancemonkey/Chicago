@@ -9,9 +9,7 @@
 import UIKit
 
 class DieButton: UIButton {
-  
-  // TODO pressing button locks results, but not until first roll
-  
+    
   var die: D6 = D6()
   
   var locked: Bool = false {

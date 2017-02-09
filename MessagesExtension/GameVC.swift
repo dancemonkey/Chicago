@@ -9,10 +9,6 @@
 import UIKit
 import Messages
 
-enum GameEndMessage: String {
-  case currentPlayerWon, currentPlayerLost
-}
-
 class GameVC: UIViewController {
   
   @IBOutlet var dieBtn: [DieButton]!
@@ -28,20 +24,21 @@ class GameVC: UIViewController {
   weak var message: MSMessage?
   weak var conversation: MSConversation!
   var composeDelegate: ComposeMessageDelegate?
-  var endGameMessage: GameEndMessage?
-//  var showResultsAtStartup: Bool = false
+  var endGameMessage: GameEndMessages?
+  
+  typealias GameResultAction = (UIAlertAction) -> ()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     game = ChicagoModel(withMessage: message, fromConversation: conversation)
-    if game!.isCheating(player: currentUser!) {
-      // TODO: INITIALIZE THE GAME BUT DISABLE ALL INTERACTION
-      print("cheater")
-    }
     currentPlayer = game!.currentPlayer
     initViewsForGame()
-    if game!.isRoundOver {
-      showResultsPopup(forGameEnd: .currentPlayerLost)
+    if game!.isCheating(player: currentUser!) {
+      disableAllButtons()
+      print("cheater")
+    }
+    if game!.isRoundOver && game!.isCheating(player: currentUser!) == false {
+      showResultsPopup(forGameEnd: .currentPlayerLost(phase: game!.currentPhase))
     }
   }
   
@@ -88,36 +85,28 @@ class GameVC: UIViewController {
   func showRoundResults() {
     let winningPlayer = game!.getPlayerWhoWonRound()
     if winningPlayer === currentPlayer! {
-      endGameMessage = .currentPlayerWon
+      endGameMessage = GameEndMessages.currentPlayerWon(phase: game!.currentPhase)
       disableAllButtons()
       showResultsPopup(forGameEnd: endGameMessage!)
     } else {
-      endGameMessage = .currentPlayerLost
+      endGameMessage = GameEndMessages.currentPlayerLost(phase: game!.currentPhase)
       disableAllButtons()
       showResultsPopup(forGameEnd: endGameMessage!)
     }
   }
   
-  func showResultsPopup(forGameEnd ending: GameEndMessage) {
-    var endMessage: String = ""
-    var actionTitle: String = ""
-    var actionClosure: (UIAlertAction) -> ()
-    switch ending {
-    case .currentPlayerLost:
-      endMessage = "you lost the round, you have to take a planet, you start the new round"
-      actionTitle = "START NEW ROUND"
-      actionClosure = { action in
-        // need to somehow inform other player of results of round before they start their turn
-        self.startNewTurn()
-      }
-    case .currentPlayerWon:
-      endMessage = "you won the round, your opponent will get a planet and start the next round"
-      actionTitle = "SEND TO OPPONENT"
-      actionClosure = { action in
-        self.composeDelegate?.compose(fromGame: self.game!)
-        // need to create flag in VC to call startNewTurn when this package arrives
-      }
+  func showResultsPopup(forGameEnd ending: GameEndMessages) {
+    // TODO: need to show result to opponent when current player loses and starts new round
+    let endMessage = ending.message()
+    let actionTitle = ending.action()
+    let lostActionClosure: GameResultAction = { [unowned self] action in
+      self.startNewTurn()
     }
+    let wonActionClosure: GameResultAction = { [unowned self] action in
+      self.composeDelegate?.compose(fromGame: self.game!)
+    }
+    let actionClosure = ending.currentPlayerWonAction() ? wonActionClosure : lostActionClosure
+    
     let resultPopup = UIAlertController(title: "Turn Over", message: endMessage, preferredStyle: .actionSheet)
     let action = UIAlertAction(title: actionTitle, style: .default, handler: actionClosure)
     resultPopup.addAction(action)
@@ -168,8 +157,14 @@ class GameVC: UIViewController {
       } else {
         composeDelegate?.compose(fromGame: self.game!)
       }
+      if game!.isPhaseOver(phase: game!.currentPhase) {
+        game!.startNewPhase(phase: game!.currentPhase)
+        initViewsForGame()
+      }
     case .newRound:
       print("new round stuff")
+    case .newPhase:
+      print("new phase stuff")
     }
   }
   
