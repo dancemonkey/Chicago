@@ -15,6 +15,7 @@ class PotDisplay: UIView {
   var totalChips: Int = 0 {
     didSet {
       chipsInPot.text = "Chips Left - \(totalChips)"
+      // TODO: flash or effect when count changes
     }
   }
   

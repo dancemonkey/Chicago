@@ -23,6 +23,7 @@ class PhaseDisplay: UIView {
 
   func setPhase(to phase: Phase) {
     phaseNumber.text = "Phase \(phase)"
+    // TODO: flash or effect when phase changes
   }
 
 }

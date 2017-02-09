@@ -10,7 +10,7 @@ import UIKit
 
 enum GameEndMessages {
   
-  case currentPlayerWon(phase: Phase), currentPlayerLost(phase: Phase)
+  case currentPlayerWon(phase: Phase), currentPlayerLost(phase: Phase), priorPlayerLost()
   
   func message() -> String? {
     switch self {
@@ -26,6 +26,8 @@ enum GameEndMessages {
       return "you lost the round, your opponent gets to destroy a planet, you start the new round"
     case .currentPlayerLost(phase: .end):
       return nil
+    case .priorPlayerLost():
+      return "they lost the round, and started a new round"
     }
   }
   
@@ -43,10 +45,12 @@ enum GameEndMessages {
       return "START NEW ROUND"
     case .currentPlayerLost(phase: .end):
       return nil
+    case .priorPlayerLost():
+      return "OKAY"
     }
   }
   
-  func currentPlayerWonAction() -> Bool {
+  func currentPlayerWonAction() -> Bool? {
     switch self {
     case .currentPlayerWon(phase: .one):
       return true
@@ -60,6 +64,8 @@ enum GameEndMessages {
       return false
     case .currentPlayerLost(phase: .end):
       return false
+    case .priorPlayerLost():
+      return nil
     }
   }
   

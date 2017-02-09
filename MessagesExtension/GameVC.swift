@@ -36,9 +36,10 @@ class GameVC: UIViewController {
     if game!.isCheating(player: currentUser!) {
       disableAllButtons()
       print("cheater")
-    }
-    if game!.isRoundOver && game!.isCheating(player: currentUser!) == false {
+    } else if game!.isRoundOver {
       showResultsPopup(forGameEnd: .currentPlayerLost(phase: game!.currentPhase))
+    } else if game!.priorPlayerLost {
+      showResultsPopup(forGameEnd: .priorPlayerLost())
     }
   }
   
@@ -101,11 +102,19 @@ class GameVC: UIViewController {
     let actionTitle = ending.action()
     let lostActionClosure: GameResultAction = { [unowned self] action in
       self.startNewTurn()
+      self.game!.priorPlayerLost = true
     }
     let wonActionClosure: GameResultAction = { [unowned self] action in
       self.composeDelegate?.compose(fromGame: self.game!)
     }
-    let actionClosure = ending.currentPlayerWonAction() ? wonActionClosure : lostActionClosure
+    let actionClosure: ((UIAlertAction) -> ())?
+    if let action = ending.currentPlayerWonAction() {
+      actionClosure = action ? wonActionClosure : lostActionClosure
+    } else {
+      actionClosure = { [unowned self] action in
+        self.game!.priorPlayerLost = false
+      }
+    }
     
     let resultPopup = UIAlertController(title: "Turn Over", message: endMessage, preferredStyle: .actionSheet)
     let action = UIAlertAction(title: actionTitle, style: .default, handler: actionClosure)
@@ -159,6 +168,7 @@ class GameVC: UIViewController {
       }
       if game!.isPhaseOver(phase: game!.currentPhase) {
         game!.startNewPhase(phase: game!.currentPhase)
+        // TODO: popup when starting new phase explaining the change in rules
         initViewsForGame()
       }
     case .newRound:

@@ -64,6 +64,7 @@ class ChicagoModel {
       return playersWhoHaveNotGone.count == 0
     }
   }
+  var priorPlayerLost: Bool = false
   
   init(withMessage message: MSMessage?, fromConversation convo: MSConversation) {
     if let msg = message, let url = msg.url {
