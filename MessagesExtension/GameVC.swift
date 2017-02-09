@@ -127,6 +127,7 @@ class GameVC: UIViewController {
     if game!.isPhaseOver(phase: game!.currentPhase) {
       game!.startNewPhase(phase: game!.currentPhase)
       // TODO: popup when starting new phase explaining the change in rules
+      // TODO: remove pot from view in phase two
       initViewsForGame()
     }
     setupPlayerDisplays()
@@ -171,11 +172,7 @@ class GameVC: UIViewController {
       } else {
         composeDelegate?.compose(fromGame: self.game!)
       }
-//      if game!.isPhaseOver(phase: game!.currentPhase) {
-//        game!.startNewPhase(phase: game!.currentPhase)
-//        // TODO: popup when starting new phase explaining the change in rules
-//        initViewsForGame()
-//      }
+      // QUESTION: Are these cases even needed?
     case .newRound:
       print("new round stuff")
     case .newPhase:
