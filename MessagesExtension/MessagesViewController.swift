@@ -155,7 +155,8 @@ extension MessagesViewController: ComposeMessageDelegate {
     let nextPlayer = URLQueryItem(name: GameItemNames.nextPlayer.rawValue, value: buildItem(forPlayer: game.currentPlayer!))
     let currentPlayer = URLQueryItem(name: GameItemNames.currentPlayer.rawValue, value: buildItem(forPlayer: game.nextPlayer!))
     let lastUserToOpen = URLQueryItem(name: GameItemNames.lastUserToOpen.rawValue, value: convo.localParticipantIdentifier.uuidString)
-    components.queryItems = [potSize, phase, numberOfPlayers, nextPlayer, currentPlayer, lastUserToOpen]
+    let priorPlayerLost = URLQueryItem(name: GameItemNames.priorPlayerLost.rawValue, value: "\(game.priorPlayerLost)")
+    components.queryItems = [potSize, phase, numberOfPlayers, nextPlayer, currentPlayer, lastUserToOpen, priorPlayerLost]
     
     message.summaryText = "$\(convo.localParticipantIdentifier)"
     

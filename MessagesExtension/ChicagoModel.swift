@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, priorPlayerLost
 }
 
 enum Phase: Int {
@@ -89,7 +89,9 @@ class ChicagoModel {
             }
             if item.name == GameItemNames.lastUserToOpen.rawValue {
               _lastUserToOpen = item.value!
-              print("last user to open as parsed from game model \(lastUserToOpen)")
+            }
+            if item.name == GameItemNames.priorPlayerLost.rawValue {
+              priorPlayerLost = Bool(item.value!)!
             }
           }
           
@@ -200,7 +202,6 @@ class ChicagoModel {
       }
     }
     highestPlayer?.removeChip()
-    self.addChipToPot()
   }
   
   private func addChipToPot() {

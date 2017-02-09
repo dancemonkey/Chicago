@@ -41,6 +41,7 @@ class GameVC: UIViewController {
     } else if game!.priorPlayerLost {
       showResultsPopup(forGameEnd: .priorPlayerLost())
     }
+    
   }
   
   func initViewsForGame() {
@@ -97,7 +98,6 @@ class GameVC: UIViewController {
   }
   
   func showResultsPopup(forGameEnd ending: GameEndMessages) {
-    // TODO: need to show result to opponent when current player loses and starts new round
     let endMessage = ending.message()
     let actionTitle = ending.action()
     let lostActionClosure: GameResultAction = { [unowned self] action in
@@ -124,6 +124,11 @@ class GameVC: UIViewController {
   
   func startNewTurn() {
     game!.startNewRound()
+    if game!.isPhaseOver(phase: game!.currentPhase) {
+      game!.startNewPhase(phase: game!.currentPhase)
+      // TODO: popup when starting new phase explaining the change in rules
+      initViewsForGame()
+    }
     setupPlayerDisplays()
     rollBtn.set(state: .roll)
     for die in dieBtn {
@@ -166,11 +171,11 @@ class GameVC: UIViewController {
       } else {
         composeDelegate?.compose(fromGame: self.game!)
       }
-      if game!.isPhaseOver(phase: game!.currentPhase) {
-        game!.startNewPhase(phase: game!.currentPhase)
-        // TODO: popup when starting new phase explaining the change in rules
-        initViewsForGame()
-      }
+//      if game!.isPhaseOver(phase: game!.currentPhase) {
+//        game!.startNewPhase(phase: game!.currentPhase)
+//        // TODO: popup when starting new phase explaining the change in rules
+//        initViewsForGame()
+//      }
     case .newRound:
       print("new round stuff")
     case .newPhase:

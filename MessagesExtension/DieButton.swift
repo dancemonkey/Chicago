@@ -17,6 +17,8 @@ class DieButton: UIButton {
       if locked {
         layer.borderColor = UIColor.red.cgColor
         layer.borderWidth = 1.0
+      } else {
+        layer.borderColor = UIColor.clear.cgColor
       }
     }
   }
