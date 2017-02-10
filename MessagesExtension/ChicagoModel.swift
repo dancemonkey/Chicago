@@ -177,6 +177,16 @@ class ChicagoModel {
     return currentPhase == .two && player.chips == 0
   }
   
+  func isGameOver() -> Bool {
+    guard currentPhase == .two else {
+      return false
+    }
+    for player in players {
+      return player.chips == 0
+    }
+    return false
+  }
+  
   func getPlayerWhoWonRound() -> Player {
     var baseScore = players[0].score
     var winningPlayer = players[0]

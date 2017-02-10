@@ -24,7 +24,6 @@ class GameVC: UIViewController {
   weak var message: MSMessage?
   weak var conversation: MSConversation!
   var composeDelegate: ComposeMessageDelegate?
-  var endRoundMessage: RoundEndMessages?
   
   typealias GameResultAction = (UIAlertAction) -> ()
   
@@ -37,9 +36,9 @@ class GameVC: UIViewController {
       disableAllButtons()
       print("cheater")
     } else if game!.isRoundOver {
-      showResultsPopup(forGameEnd: .currentPlayerLost(phase: game!.currentPhase))
+      showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
     } else if game!.priorPlayerLost {
-      showResultsPopup(forGameEnd: .priorPlayerLost())
+      showResultsPopup(forRoundEnd: .priorPlayerLost())
     }
     
   }
@@ -51,7 +50,12 @@ class GameVC: UIViewController {
     }
     setupPlayerDisplays()
     setCurrentPlayer()
-    potDisplay.setChips(to: game.potOfChips)
+    if game.currentPhase == .one {
+      potDisplay.isOpaque = true
+      potDisplay.setChips(to: game.potOfChips)
+    } else {
+      potDisplay.isOpaque = false
+    }
     phaseDisplay.setPhase(to: game.currentPhase)
   }
   
@@ -83,45 +87,7 @@ class GameVC: UIViewController {
     potDisplay.setChips(to: game!.potOfChips)
     setupPlayerDisplays()
   }
-  
-  func showRoundResults() {
-    let winningPlayer = game!.getPlayerWhoWonRound()
-    if winningPlayer === currentPlayer! {
-      endRoundMessage = RoundEndMessages.currentPlayerWon(phase: game!.currentPhase)
-      disableAllButtons()
-      showResultsPopup(forGameEnd: endRoundMessage!)
-    } else {
-      endRoundMessage = RoundEndMessages.currentPlayerLost(phase: game!.currentPhase)
-      disableAllButtons()
-      showResultsPopup(forGameEnd: endRoundMessage!)
-    }
-  }
-  
-  func showResultsPopup(forGameEnd ending: RoundEndMessages) {
-    let endMessage = ending.message()
-    let actionTitle = ending.action()
-    let lostActionClosure: GameResultAction = { [unowned self] action in
-      self.startNewTurn()
-      self.game!.priorPlayerLost = true
-    }
-    let wonActionClosure: GameResultAction = { [unowned self] action in
-      self.composeDelegate?.compose(fromGame: self.game!)
-    }
-    let actionClosure: ((UIAlertAction) -> ())?
-    if let action = ending.currentPlayerWonAction() {
-      actionClosure = action ? wonActionClosure : lostActionClosure
-    } else {
-      actionClosure = { [unowned self] action in
-        self.game!.priorPlayerLost = false
-      }
-    }
-    
-    let resultPopup = UIAlertController(title: "Turn Over", message: endMessage, preferredStyle: .actionSheet)
-    let action = UIAlertAction(title: actionTitle, style: .default, handler: actionClosure)
-    resultPopup.addAction(action)
-    present(resultPopup, animated: true, completion: nil)
-  }
-  
+
   func showPhaseEndPopup(forPhase phase: Phase) {
     let message = Phase.message(phase)
     let title = Phase.title(phase)
@@ -136,7 +102,6 @@ class GameVC: UIViewController {
     if game!.isPhaseOver(phase: game!.currentPhase) {
       showPhaseEndPopup(forPhase: game!.currentPhase)
       game!.startNewPhase(phase: game!.currentPhase)
-      // TODO: remove pot from view in phase two
       initViewsForGame()
     }
     setupPlayerDisplays()
@@ -177,7 +142,11 @@ class GameVC: UIViewController {
     case .send:
       if game!.isRoundOver {
         distributeChips()
-        showRoundResults()
+        if game!.isGameOver() {
+          showWinningResults()
+        } else {
+          showRoundEndResults()
+        }
       } else {
         composeDelegate?.compose(fromGame: self.game!)
       }
@@ -188,6 +157,73 @@ class GameVC: UIViewController {
       print("new phase stuff")
     }
   }
+  
+  func showRoundEndResults() {
+    let winningPlayer = game!.getPlayerWhoWonRound()
+    disableAllButtons()
+    if winningPlayer === currentPlayer! {
+      let endRoundMessage = RoundEndMessages.currentPlayerWon(phase: game!.currentPhase)
+      showResultsPopup(forRoundEnd: endRoundMessage)
+    } else {
+      let endRoundMessage = RoundEndMessages.currentPlayerLost(phase: game!.currentPhase)
+      showResultsPopup(forRoundEnd: endRoundMessage)
+    }
+  }
+  
+  func showWinningResults() {
+    let winningPlayer = game!.getPlayerWhoWonRound()
+    disableAllButtons()
+    showGameEndPopup(forWinner: winningPlayer)
+  }
+  
+  func showGameEndPopup(forWinner winner: Player) {
+    var message = ""
+    if winner === currentPlayer! {
+      message = "You won!"
+    } else {
+      message = "You lost!"
+    }
+    let action: ((UIAlertAction) -> ()) = { [unowned self] action in
+      // if current player lost or won, send results to other player.
+      // they can start the new game after basking in their glory
+    }
+  }
+  
+  func startNewGame() {
+    // reset game and player stats in model
+    // reset all views
+    // this will get called by next player after game is over
+  }
+  
+  func showResultsPopup(forRoundEnd ending: RoundEndMessages) {
+    let endMessage = ending.message()
+    let actionTitle = ending.action()
+    let lostActionClosure: GameResultAction = { [unowned self] action in
+      self.startNewTurn()
+      self.game!.priorPlayerLost = true
+    }
+    let wonActionClosure: GameResultAction = { [unowned self] action in
+      self.composeDelegate?.compose(fromGame: self.game!)
+    }
+    let actionClosure: ((UIAlertAction) -> ())?
+    if let action = ending.currentPlayerWonAction() {
+      actionClosure = action ? wonActionClosure : lostActionClosure
+    } else {
+      actionClosure = { [unowned self] action in
+        self.game!.priorPlayerLost = false
+      }
+    }
+    
+    buildPopup(withMessage: endMessage!, title: "Turn Over", action: actionClosure, actionTitle: actionTitle!)
+  }
+  
+  func buildPopup(withMessage message: String, title: String, action: ((UIAlertAction) -> ())?, actionTitle: String) {
+    let popup = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+    let action = UIAlertAction(title: actionTitle, style: .default, handler: action)
+    popup.addAction(action)
+    present(popup, animated: true, completion: nil)
+  }
+
   
   @IBAction func lockDie(sender: DieButton) {
     if currentPlayer!.didRoll {
