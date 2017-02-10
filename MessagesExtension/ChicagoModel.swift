@@ -23,6 +23,28 @@ enum GameItemNames: String {
 
 enum Phase: Int {
   case one = 1, two, end
+  
+  func message() -> String? {
+    switch self {
+    case .one:
+      return "The winner of each round now gets to destroy one of their planets."
+    case .two:
+      return nil
+    case .end:
+      return nil
+    }
+  }
+  
+  func title() -> String? {
+    switch self {
+    case .one:
+      return "Phase 1 is over!"
+    case .two:
+      return nil
+    case.end:
+      return nil
+    }
+  }
 }
 
 class ChicagoModel {

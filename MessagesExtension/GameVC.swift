@@ -122,11 +122,20 @@ class GameVC: UIViewController {
     present(resultPopup, animated: true, completion: nil)
   }
   
+  func showPhaseEndPopup(forPhase phase: Phase) {
+    let message = Phase.message(phase)
+    let title = Phase.title(phase)
+    let phasePopup = UIAlertController(title: title(), message: message(), preferredStyle: .alert)
+    let confirm = UIAlertAction(title: "Ok", style: .default, handler: nil)
+    phasePopup.addAction(confirm)
+    present(phasePopup, animated: true, completion: nil)
+  }
+  
   func startNewTurn() {
     game!.startNewRound()
     if game!.isPhaseOver(phase: game!.currentPhase) {
+      showPhaseEndPopup(forPhase: game!.currentPhase)
       game!.startNewPhase(phase: game!.currentPhase)
-      // TODO: popup when starting new phase explaining the change in rules
       // TODO: remove pot from view in phase two
       initViewsForGame()
     }
