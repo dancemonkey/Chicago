@@ -24,7 +24,7 @@ class GameVC: UIViewController {
   weak var message: MSMessage?
   weak var conversation: MSConversation!
   var composeDelegate: ComposeMessageDelegate?
-  var endGameMessage: GameEndMessages?
+  var endRoundMessage: RoundEndMessages?
   
   typealias GameResultAction = (UIAlertAction) -> ()
   
@@ -87,17 +87,17 @@ class GameVC: UIViewController {
   func showRoundResults() {
     let winningPlayer = game!.getPlayerWhoWonRound()
     if winningPlayer === currentPlayer! {
-      endGameMessage = GameEndMessages.currentPlayerWon(phase: game!.currentPhase)
+      endRoundMessage = RoundEndMessages.currentPlayerWon(phase: game!.currentPhase)
       disableAllButtons()
-      showResultsPopup(forGameEnd: endGameMessage!)
+      showResultsPopup(forGameEnd: endRoundMessage!)
     } else {
-      endGameMessage = GameEndMessages.currentPlayerLost(phase: game!.currentPhase)
+      endRoundMessage = RoundEndMessages.currentPlayerLost(phase: game!.currentPhase)
       disableAllButtons()
-      showResultsPopup(forGameEnd: endGameMessage!)
+      showResultsPopup(forGameEnd: endRoundMessage!)
     }
   }
   
-  func showResultsPopup(forGameEnd ending: GameEndMessages) {
+  func showResultsPopup(forGameEnd ending: RoundEndMessages) {
     let endMessage = ending.message()
     let actionTitle = ending.action()
     let lostActionClosure: GameResultAction = { [unowned self] action in

@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum GameEndMessages {
+enum RoundEndMessages {
   
   case currentPlayerWon(phase: Phase), currentPlayerLost(phase: Phase), priorPlayerLost()
   
