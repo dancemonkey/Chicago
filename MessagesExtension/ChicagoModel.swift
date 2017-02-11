@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, priorPlayerLost
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, priorPlayerLost, otherPlayerSawGameEndResults
 }
 
 enum Phase: Int {
@@ -40,7 +40,7 @@ enum Phase: Int {
     case .one:
       return "Phase 1 is over!"
     case .two:
-      return nil
+      return "Game over!"
     case.end:
       return nil
     }
@@ -88,14 +88,12 @@ class ChicagoModel {
   }
   var priorPlayerLost: Bool = false
   var otherPlayerSawGameEndResults: Bool = false
+  var firstStart: Bool = false
   
   init(withMessage message: MSMessage?, fromConversation convo: MSConversation) {
     if let msg = message, let url = msg.url {
-      print("found message and url")
       if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: false) {
-        print("found components")
         if let queryItems = components.queryItems {
-          print("found queryItems")
           
           for item in queryItems {
             if item.name == GameItemNames.phase.rawValue {
@@ -116,6 +114,9 @@ class ChicagoModel {
             if item.name == GameItemNames.priorPlayerLost.rawValue {
               priorPlayerLost = Bool(item.value!)!
             }
+            if item.name == GameItemNames.otherPlayerSawGameEndResults.rawValue {
+              otherPlayerSawGameEndResults = Bool(item.value!)!
+            }
           }
           
           _players.append(currentPlayer!)
@@ -132,6 +133,7 @@ class ChicagoModel {
       _players.append(_nextPlayer!)
       _potOfChips = players.count //* 2
       _currentPhase = .one
+      firstStart = true
     }
   }
   
@@ -159,7 +161,7 @@ class ChicagoModel {
     case .two:
       return currentPlayer?.chips == 0
     case .end:
-      return true
+      return false
     }
   }
   
@@ -179,7 +181,7 @@ class ChicagoModel {
   }
   
   func isGameOver() -> Bool {
-    guard currentPhase == .two else {
+    guard currentPhase == .two || currentPhase == .end else {
       return false
     }
     for player in players {

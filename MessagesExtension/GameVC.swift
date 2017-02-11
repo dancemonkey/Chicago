@@ -36,14 +36,21 @@ class GameVC: UIViewController {
       disableAllButtons()
       return
     }
+  }
+  
+  func startGame() {
+    game = ChicagoModel(withMessage: message, fromConversation: conversation)
+    currentPlayer = game!.currentPlayer
+    initViewsForGame()
     
-    if game!.isGameOver() {
-      print("game is over")
-      showWinningResults()
-    } else if game!.isRoundOver {
-      showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
-    } else if game!.priorPlayerLost {
-      showResultsPopup(forRoundEnd: .priorPlayerLost())
+    if game!.firstStart == false {
+      if game!.isGameOver() {
+        showWinningResults()
+      } else if game!.isRoundOver {
+        showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
+      } else if game!.priorPlayerLost {
+        showResultsPopup(forRoundEnd: .priorPlayerLost())
+      }
     }
     
   }
@@ -56,10 +63,10 @@ class GameVC: UIViewController {
     setupPlayerDisplays()
     setCurrentPlayer()
     if game.currentPhase == .one {
-      potDisplay.isOpaque = true
+      potDisplay.isHidden = false
       potDisplay.setChips(to: game.potOfChips)
     } else {
-      potDisplay.isOpaque = false
+      potDisplay.isHidden = true
     }
     phaseDisplay.setPhase(to: game.currentPhase)
   }
@@ -137,34 +144,25 @@ class GameVC: UIViewController {
         for die in dieBtn where die.locked == false {
           die.setFace(toValue: die.die.roll(withModifier: 0))
         }
-        scorePlayer()
-        if currentPlayer!.isTurnOver() {
-          rollBtn.set(state: .send)
-          if game!.isRoundOver {
-            distributeChips()
-            if game!.isGameOver() {
-              showWinningResults()
-              game!.otherPlayerSawGameEndResults = true
-            } else {
-              showRoundEndResults()
-            }
-          }
-        }
       } catch {
         print(error)
       }
+      scorePlayer()
+      if currentPlayer!.isTurnOver() {
+        print("turn over")
+        rollBtn.set(state: .send)
+        if game!.isGameOver() {
+          print("game over")
+          showWinningResults()
+        }
+        if game!.isRoundOver {
+          print("round over")
+          distributeChips()
+          showRoundEndResults()
+        }
+      }
     case .send:
-      //      if game!.isRoundOver {
-      //        distributeChips()
-      //        if game!.isGameOver() {
-      //          showWinningResults()
-      //          game!.otherPlayerSawGameEndResults = true
-      //        } else {
-      //          showRoundEndResults()
-      //        }
-      //      } else {
       composeDelegate?.compose(fromGame: self.game!)
-      //      }
     // QUESTION: Are these cases even needed?
     case .newRound:
       print("new round stuff")
@@ -214,12 +212,6 @@ class GameVC: UIViewController {
     buildPopup(withMessage: message, title: "Game Over", action: action, actionTitle: "OK")
   }
   
-  func startGame() {
-    game = ChicagoModel(withMessage: message, fromConversation: conversation)
-    currentPlayer = game!.currentPlayer
-    initViewsForGame()
-  }
-  
   func showResultsPopup(forRoundEnd ending: RoundEndMessages) {
     let endMessage = ending.message()
     let actionTitle = ending.action()
@@ -239,7 +231,7 @@ class GameVC: UIViewController {
       }
     }
     
-    buildPopup(withMessage: endMessage!, title: "Turn Over", action: actionClosure, actionTitle: actionTitle!)
+    buildPopup(withMessage: endMessage!, title: "Round Over", action: actionClosure, actionTitle: actionTitle!)
   }
   
   func buildPopup(withMessage message: String, title: String, action: ((UIAlertAction) -> ())?, actionTitle: String) {
