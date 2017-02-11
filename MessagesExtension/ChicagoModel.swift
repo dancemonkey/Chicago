@@ -87,6 +87,7 @@ class ChicagoModel {
     }
   }
   var priorPlayerLost: Bool = false
+  var otherPlayerSawGameEndResults: Bool = false
   
   init(withMessage message: MSMessage?, fromConversation convo: MSConversation) {
     if let msg = message, let url = msg.url {
@@ -129,7 +130,7 @@ class ChicagoModel {
       _nextPlayer = Player()
       _nextPlayer?.setPlayer(id: "NIL")
       _players.append(_nextPlayer!)
-      _potOfChips = players.count * 2
+      _potOfChips = players.count //* 2
       _currentPhase = .one
     }
   }
@@ -186,7 +187,7 @@ class ChicagoModel {
     }
     return false
   }
-  
+    
   func getPlayerWhoWonRound() -> Player {
     var baseScore = players[0].score
     var winningPlayer = players[0]

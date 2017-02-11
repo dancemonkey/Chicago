@@ -29,12 +29,17 @@ class GameVC: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    game = ChicagoModel(withMessage: message, fromConversation: conversation)
-    currentPlayer = game!.currentPlayer
-    initViewsForGame()
-    if game!.isCheating(player: currentUser!) {
+    
+    startGame()
+    
+    guard game!.isCheating(player: currentUser!) == false else {
       disableAllButtons()
-      print("cheater")
+      return
+    }
+    
+    if game!.isGameOver() {
+      print("game is over")
+      showWinningResults()
     } else if game!.isRoundOver {
       showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
     } else if game!.priorPlayerLost {
@@ -87,7 +92,7 @@ class GameVC: UIViewController {
     potDisplay.setChips(to: game!.potOfChips)
     setupPlayerDisplays()
   }
-
+  
   func showPhaseEndPopup(forPhase phase: Phase) {
     let message = Phase.message(phase)
     let title = Phase.title(phase)
@@ -135,22 +140,32 @@ class GameVC: UIViewController {
         scorePlayer()
         if currentPlayer!.isTurnOver() {
           rollBtn.set(state: .send)
+          if game!.isRoundOver {
+            distributeChips()
+            if game!.isGameOver() {
+              showWinningResults()
+              game!.otherPlayerSawGameEndResults = true
+            } else {
+              showRoundEndResults()
+            }
+          }
         }
       } catch {
         print(error)
       }
     case .send:
-      if game!.isRoundOver {
-        distributeChips()
-        if game!.isGameOver() {
-          showWinningResults()
-        } else {
-          showRoundEndResults()
-        }
-      } else {
-        composeDelegate?.compose(fromGame: self.game!)
-      }
-      // QUESTION: Are these cases even needed?
+      //      if game!.isRoundOver {
+      //        distributeChips()
+      //        if game!.isGameOver() {
+      //          showWinningResults()
+      //          game!.otherPlayerSawGameEndResults = true
+      //        } else {
+      //          showRoundEndResults()
+      //        }
+      //      } else {
+      composeDelegate?.compose(fromGame: self.game!)
+      //      }
+    // QUESTION: Are these cases even needed?
     case .newRound:
       print("new round stuff")
     case .newPhase:
@@ -178,21 +193,31 @@ class GameVC: UIViewController {
   
   func showGameEndPopup(forWinner winner: Player) {
     var message = ""
+    var action: ((UIAlertAction) -> ())
     if winner === currentPlayer! {
       message = "You won!"
     } else {
       message = "You lost!"
     }
-    let action: ((UIAlertAction) -> ()) = { [unowned self] action in
-      // if current player lost or won, send results to other player.
-      // they can start the new game after basking in their glory
+    if game!.otherPlayerSawGameEndResults {
+      action = { action in
+        self.message = nil
+        self.startGame()
+        self.enableAllButtons()
+      }
+    } else {
+      action = { [unowned self] action in
+        self.game!.otherPlayerSawGameEndResults = true
+        self.composeDelegate?.compose(fromGame: self.game!)
+      }
     }
+    buildPopup(withMessage: message, title: "Game Over", action: action, actionTitle: "OK")
   }
   
-  func startNewGame() {
-    // reset game and player stats in model
-    // reset all views
-    // this will get called by next player after game is over
+  func startGame() {
+    game = ChicagoModel(withMessage: message, fromConversation: conversation)
+    currentPlayer = game!.currentPlayer
+    initViewsForGame()
   }
   
   func showResultsPopup(forRoundEnd ending: RoundEndMessages) {
@@ -223,7 +248,7 @@ class GameVC: UIViewController {
     popup.addAction(action)
     present(popup, animated: true, completion: nil)
   }
-
+  
   
   @IBAction func lockDie(sender: DieButton) {
     if currentPlayer!.didRoll {
