@@ -18,7 +18,11 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, priorPlayerLost, otherPlayerSawGameEndResults
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, otherPlayerSawGameEndResults, state
+}
+
+enum GameState: String {
+  case roundOver, phaseOver, gameOver, playing, firstStart, roundEndedPriorPlayerLost
 }
 
 enum Phase: Int {
@@ -78,7 +82,11 @@ class ChicagoModel {
   var lastUserToOpen: String? {
     return _lastUserToOpen
   }
-  var isRoundOver: Bool {
+  private var _state: GameState = .firstStart
+  var state: GameState {
+    return _state
+  }
+  private var isRoundOver: Bool {
     get {
       let playersWhoHaveNotGone: [Player] = players.filter { (player) -> Bool in
         return player.score == 0
@@ -111,8 +119,8 @@ class ChicagoModel {
             if item.name == GameItemNames.lastUserToOpen.rawValue {
               _lastUserToOpen = item.value!
             }
-            if item.name == GameItemNames.priorPlayerLost.rawValue {
-              priorPlayerLost = Bool(item.value!)!
+            if item.name == GameItemNames.state.rawValue {
+              _state = GameState(rawValue: item.value!)!
             }
             if item.name == GameItemNames.otherPlayerSawGameEndResults.rawValue {
               otherPlayerSawGameEndResults = Bool(item.value!)!
@@ -133,7 +141,7 @@ class ChicagoModel {
       _players.append(_nextPlayer!)
       _potOfChips = players.count //* 2
       _currentPhase = .one
-      firstStart = true
+      _state = .firstStart
     }
   }
   
@@ -154,7 +162,7 @@ class ChicagoModel {
     }
   }
   
-  func isPhaseOver(phase: Phase) -> Bool {
+  private func isPhaseOver(phase: Phase) -> Bool {
     switch phase {
     case .one:
       return potOfChips == 0
@@ -180,7 +188,7 @@ class ChicagoModel {
     return currentPhase == .two && player.chips == 0
   }
   
-  func isGameOver() -> Bool {
+  private func isGameOver() -> Bool {
     guard currentPhase == .two || currentPhase == .end else {
       return false
     }
@@ -265,6 +273,20 @@ class ChicagoModel {
   private func resetPlayerScores() {
     for player in players {
       player.setScore(to: 0)
+    }
+  }
+  
+  func setState(state: GameState) {
+    self._state = state
+  }
+  
+  func changeState() {
+    if isGameOver() {
+      _state = .gameOver
+    } else if isPhaseOver(phase: currentPhase) {
+      _state = .phaseOver
+    } else if isRoundOver {
+      _state = .roundEndedPriorPlayerLost
     }
   }
 
