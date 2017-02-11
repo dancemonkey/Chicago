@@ -31,6 +31,7 @@ class GameVC: UIViewController {
     super.viewDidLoad()
     
     startGame()
+    print("starting game state = \(game!.state)")
     
     guard game!.isCheating(player: currentUser!) == false else {
       disableAllButtons()
@@ -47,25 +48,18 @@ class GameVC: UIViewController {
       if game!.state == .gameOver {
         showWinningResults()
       }
-      if game!.state == .roundOver {
-        showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
+      if game!.state == .roundOver || game!.isPhaseOver(phase: game!.currentPhase) {
+        if game!.isPhaseOver(phase: game!.currentPhase) {
+          showPhaseEndPopup(forPhase: game!.currentPhase)
+        }
+        showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase), atStartup: true)
       }
-      if game!.state == .roundEndedPriorPlayerLost {
-        showResultsPopup(forRoundEnd: .priorPlayerLost())
+      if game!.state == .loserStartedNewRound {
+        showResultsPopup(forRoundEnd: .priorPlayerLost(), atStartup: true)
       }
     } else {
       game!.setState(state: .playing)
     }
-    
-//    if game!.firstStart == false {
-//      if game!.isGameOver() {
-//        showWinningResults()
-//      } else if game!.isRoundOver {
-//        showResultsPopup(forRoundEnd: .currentPlayerLost(phase: game!.currentPhase))
-//      } else if game!.priorPlayerLost {
-//        showResultsPopup(forRoundEnd: .priorPlayerLost())
-//      }
-//    }
     
   }
   
@@ -125,9 +119,9 @@ class GameVC: UIViewController {
   
   func startNewRound() {
     game!.startNewRound()
-    if game!.state == .phaseOver {
+    if game!.isPhaseOver(phase: game!.currentPhase) {
       showPhaseEndPopup(forPhase: game!.currentPhase)
-      game!.startNewPhase(phase: game!.currentPhase)
+      game!.startNewPhase()
       initViewsForGame()
     }
     setupPlayerDisplays()
@@ -168,10 +162,14 @@ class GameVC: UIViewController {
         rollBtn.set(state: .send)
         if game!.state == .roundOver {
           distributeChips()
+          if game!.isPhaseOver(phase: game!.currentPhase) {
+            game!.startNewPhase()
+          }
           if game!.state == .gameOver {
             showWinningResults()
+          } else {
+            showRoundEndResults()
           }
-          showRoundEndResults()
         }
       }
     case .send:
@@ -193,9 +191,9 @@ class GameVC: UIViewController {
       game!.setState(state: .roundOver)
     } else {
       endRoundMessage = RoundEndMessages.currentPlayerLost(phase: game!.currentPhase)
-      game!.setState(state: .roundEndedPriorPlayerLost)
+      game!.setState(state: .loserStartedNewRound)
     }
-    showResultsPopup(forRoundEnd: endRoundMessage)
+    showResultsPopup(forRoundEnd: endRoundMessage, atStartup: false)
   }
   
   func showWinningResults() {
@@ -227,13 +225,15 @@ class GameVC: UIViewController {
     buildPopup(withMessage: message, title: "Game Over", action: action, actionTitle: "OK")
   }
   
-  func showResultsPopup(forRoundEnd ending: RoundEndMessages) {
+  func showResultsPopup(forRoundEnd ending: RoundEndMessages, atStartup: Bool) {
     let endMessage = ending.message()
     let actionTitle = ending.action()
     let lostActionClosure: GameResultAction = { [unowned self] action in
+      self.game!.setState(state: .loserStartedNewRound)
       self.startNewRound()
     }
     let wonActionClosure: GameResultAction = { [unowned self] action in
+      self.game!.setState(state: .roundOver)
       self.composeDelegate?.compose(fromGame: self.game!)
     }
     let actionClosure: ((UIAlertAction) -> ())?
@@ -244,7 +244,9 @@ class GameVC: UIViewController {
         self.game!.priorPlayerLost = false
       }
     }
-    
+    if atStartup {
+      game!.setState(state: .playing)
+    }
     buildPopup(withMessage: endMessage!, title: "Round Over", action: actionClosure, actionTitle: actionTitle!)
   }
   

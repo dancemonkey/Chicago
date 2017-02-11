@@ -22,7 +22,7 @@ enum GameItemNames: String {
 }
 
 enum GameState: String {
-  case roundOver, phaseOver, gameOver, playing, firstStart, roundEndedPriorPlayerLost
+  case roundOver, gameOver, playing, firstStart, loserStartedNewRound
 }
 
 enum Phase: Int {
@@ -162,7 +162,7 @@ class ChicagoModel {
     }
   }
   
-  private func isPhaseOver(phase: Phase) -> Bool {
+  func isPhaseOver(phase: Phase) -> Bool {
     switch phase {
     case .one:
       return potOfChips == 0
@@ -173,8 +173,8 @@ class ChicagoModel {
     }
   }
   
-  func startNewPhase(phase: Phase) {
-    switch phase {
+  func startNewPhase() {
+    switch currentPhase {
     case .one:
       self._currentPhase = .two
     case .two:
@@ -283,11 +283,10 @@ class ChicagoModel {
   func changeState() {
     if isGameOver() {
       _state = .gameOver
-    } else if isPhaseOver(phase: currentPhase) {
-      _state = .phaseOver
     } else if isRoundOver {
-      _state = .roundEndedPriorPlayerLost
+      _state = .roundOver
     }
+    print("\(#function) changed state to \(_state)")
   }
 
 }
