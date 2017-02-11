@@ -162,8 +162,10 @@ class GameVC: UIViewController {
         rollBtn.set(state: .send)
         if game!.state == .roundOver {
           distributeChips()
+          game!.changeState()
           if game!.isPhaseOver(phase: game!.currentPhase) {
             game!.startNewPhase()
+            game!.changeState()
           }
           if game!.state == .gameOver {
             showWinningResults()
@@ -229,7 +231,11 @@ class GameVC: UIViewController {
     let endMessage = ending.message()
     let actionTitle = ending.action()
     let lostActionClosure: GameResultAction = { [unowned self] action in
-      self.game!.setState(state: .loserStartedNewRound)
+      if atStartup {
+        self.game!.setState(state: .playing)
+      } else {
+        self.game!.setState(state: .loserStartedNewRound)
+      }
       self.startNewRound()
     }
     let wonActionClosure: GameResultAction = { [unowned self] action in
@@ -241,11 +247,8 @@ class GameVC: UIViewController {
       actionClosure = action ? wonActionClosure : lostActionClosure
     } else {
       actionClosure = { [unowned self] action in
-        self.game!.priorPlayerLost = false
+//        self.game!.priorPlayerLost = false
       }
-    }
-    if atStartup {
-      game!.setState(state: .playing)
     }
     buildPopup(withMessage: endMessage!, title: "Round Over", action: actionClosure, actionTitle: actionTitle!)
   }
