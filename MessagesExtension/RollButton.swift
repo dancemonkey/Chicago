@@ -9,7 +9,7 @@
 import UIKit
 
 enum RollButtonState {
-  case roll, send, newRound, newPhase
+  case roll, send
 }
 
 class RollButton: UIButton {
@@ -21,10 +21,6 @@ class RollButton: UIButton {
         setTitle("ROLL", for: .normal)
       case .send:
         setTitle("SEND", for: .normal)
-      case .newRound:
-        setTitle("START NEXT ROUND", for: .normal)
-      case .newPhase:
-        setTitle("START NEXT PHASE", for: .normal)
       }
     }
   }

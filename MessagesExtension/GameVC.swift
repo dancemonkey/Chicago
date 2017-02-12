@@ -31,7 +31,6 @@ class GameVC: UIViewController {
     super.viewDidLoad()
     
     startGame()
-    print("starting game state = \(game!.state)")
     
     guard game!.isCheating(player: currentUser!) == false else {
       disableAllButtons()
@@ -159,7 +158,6 @@ class GameVC: UIViewController {
       if currentPlayer!.isTurnOver() {
         game!.setRollLimitForNextPlayer()
         game!.changeState()
-        print(game!.state)
         rollBtn.set(state: .send)
         if game!.state == .roundOver {
           distributeChips()
@@ -177,11 +175,6 @@ class GameVC: UIViewController {
       }
     case .send:
       composeDelegate?.compose(fromGame: self.game!)
-    // QUESTION: Are these cases even needed?
-    case .newRound:
-      print("new round stuff")
-    case .newPhase:
-      print("new phase stuff")
     }
   }
   
@@ -247,9 +240,7 @@ class GameVC: UIViewController {
     if let action = ending.currentPlayerWonAction() {
       actionClosure = action ? wonActionClosure : lostActionClosure
     } else {
-      actionClosure = { [unowned self] action in
-//        self.game!.priorPlayerLost = false
-      }
+      actionClosure = nil
     }
     buildPopup(withMessage: endMessage!, title: "Round Over", action: actionClosure, actionTitle: actionTitle!)
   }

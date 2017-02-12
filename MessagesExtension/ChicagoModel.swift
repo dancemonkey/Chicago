@@ -18,7 +18,7 @@ enum PlayerItemNames: String {
 }
 
 enum GameItemNames: String {
-  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, showRoundResults, otherPlayerSawGameEndResults, state
+  case phase, potSize, numberOfPlayers, currentPlayer, nextPlayer, lastUserToOpen, otherPlayerSawGameEndResults, state
 }
 
 enum GameState: String {
@@ -182,6 +182,7 @@ class ChicagoModel {
     case .end:
       self._currentPhase = .one
     }
+    changeState()
   }
   
   func isGameWon(byPlayer player: Player) -> Bool {
