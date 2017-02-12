@@ -139,7 +139,7 @@ class ChicagoModel {
       _nextPlayer = Player()
       _nextPlayer?.setPlayer(id: "NIL")
       _players.append(_nextPlayer!)
-      _potOfChips = players.count //* 2
+      _potOfChips = players.count * 2
       _currentPhase = .one
       _state = .firstStart
     }
@@ -278,6 +278,12 @@ class ChicagoModel {
   
   func setState(state: GameState) {
     self._state = state
+  }
+  
+  func setRollLimitForNextPlayer() {
+    if isRoundOver == false {
+      _nextPlayer?.setRollLimit(to: currentPlayer!.totalRolls)
+    }
   }
   
   func changeState() {

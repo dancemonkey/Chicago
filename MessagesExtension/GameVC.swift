@@ -157,6 +157,7 @@ class GameVC: UIViewController {
       }
       scorePlayer()
       if currentPlayer!.isTurnOver() {
+        game!.setRollLimitForNextPlayer()
         game!.changeState()
         print(game!.state)
         rollBtn.set(state: .send)
@@ -260,11 +261,15 @@ class GameVC: UIViewController {
     present(popup, animated: true, completion: nil)
   }
   
-  
   @IBAction func lockDie(sender: DieButton) {
     if currentPlayer!.didRoll {
       sender.locked = true
     }
+  }
+  
+  @IBAction func tempDoneBtn(sender: UIButton) {
+    game!.setRollLimitForNextPlayer()
+    composeDelegate?.compose(fromGame: self.game!)
   }
   
 }

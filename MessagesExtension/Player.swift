@@ -22,6 +22,10 @@ class Player {
   var rollLimit: Int {
     return _rollLimit
   }
+  private var _totalRolls: Int = 0
+  var totalRolls: Int {
+    return _totalRolls
+  }
   private var _chips: Int
   var chips: Int {
     return _chips
@@ -54,12 +58,14 @@ class Player {
       _availableMoves.append(.roll)
     }
     _availableMoves.append(.setAside)
+    print("\(#function) set roll limit to \(_rollLimit)")
   }
   
   func makeMove(_ move: ValidMove) throws {
     switch move {
     case .roll:
       didRoll = true
+      _totalRolls = _totalRolls + 1
       if _availableMoves.contains(.roll) {
         _availableMoves.remove(at: _availableMoves.index(of: .roll)!)
       } else {
@@ -87,6 +93,7 @@ class Player {
   }
   
   func isTurnOver() -> Bool {
+    print("total rolls = \(totalRolls)")
     return availableMoves.contains(.roll) == false
   }
   
