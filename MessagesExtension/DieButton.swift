@@ -32,4 +32,12 @@ class DieButton: UIButton {
     self.setTitle("\(value)", for: .normal)
   }
   
+  func lock() {
+    self.locked = true
+  }
+  
+  func unLock() {
+    self.locked = false
+  }
+  
 }

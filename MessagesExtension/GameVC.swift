@@ -68,7 +68,7 @@ class GameVC: UIViewController {
       return
     }
     setupPlayerDisplays()
-    setCurrentPlayer()
+    setCurrentPlayerDisplay()
     if game.currentPhase == .one {
       potDisplay.isHidden = false
       potDisplay.setChips(to: game.potOfChips)
@@ -86,7 +86,7 @@ class GameVC: UIViewController {
     }
   }
   
-  func setCurrentPlayer() {
+  func setCurrentPlayerDisplay() {
     currentPlayerDisplay = playerDisplay.first(where: { (display) -> Bool in
       display.playerID == currentPlayer?.playerID
     })
@@ -126,7 +126,7 @@ class GameVC: UIViewController {
     setupPlayerDisplays()
     rollBtn.set(state: .roll)
     for die in dieBtn {
-      die.locked = false
+      die.unLock()
     }
     enableAllButtons()
   }
@@ -254,7 +254,7 @@ class GameVC: UIViewController {
   
   @IBAction func lockDie(sender: DieButton) {
     if currentPlayer!.didRoll {
-      sender.locked = true
+      sender.lock()
     }
   }
   

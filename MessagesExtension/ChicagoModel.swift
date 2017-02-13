@@ -129,7 +129,7 @@ class ChicagoModel {
           
           _players.append(currentPlayer!)
           _players.append(nextPlayer!)
-
+          
         }
       }
     } else {
@@ -198,7 +198,7 @@ class ChicagoModel {
     }
     return false
   }
-    
+  
   func getPlayerWhoWonRound() -> Player {
     var baseScore = players[0].score
     var winningPlayer = players[0]
@@ -282,9 +282,8 @@ class ChicagoModel {
   }
   
   func setRollLimitForNextPlayer() {
-    if isRoundOver == false {
-      _nextPlayer?.setRollLimit(to: currentPlayer!.totalRolls)
-    }
+    let rollLimit = isRoundOver ? 3 : currentPlayer!.totalRolls
+    _nextPlayer?.setRollLimit(to: rollLimit)
   }
   
   func changeState() {
@@ -295,5 +294,5 @@ class ChicagoModel {
     }
     print("\(#function) changed state to \(_state)")
   }
-
+  
 }
